@@ -1,0 +1,14 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>tes.ino
+--
+eeh()
+</help_text><element><id>UMLClass</id><coordinates><x>390</x><y>170</y><w>130</w><h>70</h></coordinates><panel_attributes>elevator.ino
+--
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>130</x><y>280</y><w>100</w><h>40</h></coordinates><panel_attributes>sensors.ino
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>280</y><w>100</w><h>40</h></coordinates><panel_attributes>actuators.ino
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>400</x><y>280</y><w>100</w><h>40</h></coordinates><panel_attributes>HMI.ino
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>170</x><y>200</y><w>240</w><h>100</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>10;80;10;10;220;10</additional_attributes></element><element><id>Relation</id><coordinates><x>510</x><y>200</y><w>240</w><h>100</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>220;80;220;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>440</x><y>230</y><w>30</w><h>70</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element></diagram>
