@@ -25,12 +25,12 @@ void MotorDC::writeDC(motorEnums::motorState dir, int driveSpeed,int driveTime_m
         {
         case motorEnums::winding:
         {
-            digitalWrite(phase_,LOW); //clockwise
+            digitalWrite(phase_,LOW); //clockwise?
             break;
         }
         case motorEnums::unwinding:
         {
-            digitalWrite(phase_,HIGH); //counter-clockwise
+            digitalWrite(phase_,HIGH); //counter-clockwise?
             break;
         }
             
