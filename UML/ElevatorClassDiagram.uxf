@@ -4,7 +4,7 @@ eeh()
 </help_text><element><id>UMLClass</id><coordinates><x>310</x><y>90</y><w>190</w><h>190</h></coordinates><panel_attributes>elevator.ino
 --
 currentFloor : int
-targetFloor : array
+queue : array
 servoState : enum
 stepperState : enum
 --
