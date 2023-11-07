@@ -1,17 +1,17 @@
 <diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>tes.ino
 --
 eeh()
-</help_text><element><id>UMLClass</id><coordinates><x>310</x><y>90</y><w>190</w><h>190</h></coordinates><panel_attributes>elevator.ino
+</help_text><element><id>UMLClass</id><coordinates><x>340</x><y>60</y><w>190</w><h>190</h></coordinates><panel_attributes>elevator.ino
 --
 currentFloor : int
 queue : vector
 servoState : enum
 stepperState : enum
 --
-moveElevator()
-moveDoor()
 posPlot()
-queueSystem()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>180</x><y>390</y><w>250</w><h>230</h></coordinates><panel_attributes>HMI.ino
+queueSystem()
+upFunc()
+downFunc()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>210</x><y>360</y><w>250</w><h>230</h></coordinates><panel_attributes>HMI.ino
 --
 buttonpressed : enum
 ledNumber : int
@@ -19,33 +19,35 @@ ledState : boolean
 NEED up/down BUTTONS ON EACH FLOOR
 --
 buttonRead()
-ledWrite()</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>250</x><y>270</y><w>170</w><h>140</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>10;120;10;30;150;30;150;10</additional_attributes></element><element><id>UMLNote</id><coordinates><x>540</x><y>100</y><w>150</w><h>70</h></coordinates><panel_attributes>        Motor/Servo: 
+ledWrite()</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>280</x><y>240</y><w>170</w><h>140</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>10;120;10;30;150;30;150;10</additional_attributes></element><element><id>UMLNote</id><coordinates><x>570</x><y>70</y><w>150</w><h>70</h></coordinates><panel_attributes>        Motor/Servo: 
 UP
 DOWN or 
 IDLE
-bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>490</x><y>130</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>UMLNote</id><coordinates><x>130</x><y>100</y><w>140</w><h>70</h></coordinates><panel_attributes>         Door/Stepper:
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>520</x><y>100</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>UMLNote</id><coordinates><x>160</x><y>70</y><w>140</w><h>70</h></coordinates><panel_attributes>         Door/Stepper:
 OPEN
 CLOSED or
 HALF
-bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>260</x><y>130</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>50;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>580</x><y>330</y><w>80</w><h>30</h></coordinates><panel_attributes>actuators</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>390</x><y>290</y><w>250</w><h>60</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>230;40;230;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>440</x><y>390</y><w>170</w><h>230</h></coordinates><panel_attributes>servo.ino
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>290</x><y>100</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>50;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>610</x><y>300</y><w>80</w><h>30</h></coordinates><panel_attributes>actuators</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>420</x><y>260</y><w>250</w><h>60</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>230;40;230;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>470</x><y>360</y><w>170</w><h>230</h></coordinates><panel_attributes>servo.ino
 --
 desServoPos : float
 
 --
-writeServo()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>620</x><y>390</y><w>170</w><h>230</h></coordinates><panel_attributes>stepper.ino
+writeServo()
+moveElevator()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>650</x><y>360</y><w>170</w><h>230</h></coordinates><panel_attributes>stepper.ino
 --
 desStepperPos : float
 
 --
-writeStepper()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>340</x><y>340</y><w>90</w><h>40</h></coordinates><panel_attributes>switch case 
+writeStepper()
+moveDoor()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>370</x><y>310</y><w>90</w><h>40</h></coordinates><panel_attributes>switch case 
 of buttons
-bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>300</x><y>340</y><w>60</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10;40;10</additional_attributes></element><element><id>Relation</id><coordinates><x>510</x><y>340</y><w>90</w><h>70</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>10;50;10;10;70;10</additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>340</y><w>80</w><h>70</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>60;50;60;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>390</y><w>170</w><h>230</h></coordinates><panel_attributes>sensors.ino
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>330</x><y>310</y><w>60</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;50;10;10;40;10</additional_attributes></element><element><id>Relation</id><coordinates><x>540</x><y>310</y><w>90</w><h>70</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>10;50;10;10;70;10</additional_attributes></element><element><id>Relation</id><coordinates><x>680</x><y>310</y><w>80</w><h>70</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>60;50;60;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>30</x><y>360</y><w>170</w><h>230</h></coordinates><panel_attributes>sensors.ino
 --
 servoPos : float
 stepperPos : float
 --
 readServoPosition()
-readStepperPos()</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>80</x><y>290</y><w>200</w><h>120</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>10;100;10;10;180;10</additional_attributes></element><element><id>UMLNote</id><coordinates><x>110</x><y>630</y><w>60</w><h>30</h></coordinates><panel_attributes>SENSE
-bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>370</x><y>630</y><w>60</w><h>30</h></coordinates><panel_attributes>THINK
-bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>590</x><y>630</y><w>50</w><h>30</h></coordinates><panel_attributes>ACT
-bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>70</x><y>610</y><w>60</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40;40;40</additional_attributes></element><element><id>Relation</id><coordinates><x>330</x><y>610</y><w>60</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40;40;40</additional_attributes></element><element><id>Relation</id><coordinates><x>550</x><y>610</y><w>60</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40;40;40</additional_attributes></element><element><id>Relation</id><coordinates><x>630</x><y>610</y><w>60</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>40;10;40;40;10;40</additional_attributes></element></diagram>
+readStepperPos()</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>110</x><y>260</y><w>200</w><h>120</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>10;100;10;10;180;10</additional_attributes></element><element><id>UMLNote</id><coordinates><x>140</x><y>600</y><w>60</w><h>30</h></coordinates><panel_attributes>SENSE
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>400</x><y>600</y><w>60</w><h>30</h></coordinates><panel_attributes>THINK
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>620</x><y>600</y><w>50</w><h>30</h></coordinates><panel_attributes>ACT
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>100</x><y>580</y><w>60</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40;40;40</additional_attributes></element><element><id>Relation</id><coordinates><x>360</x><y>580</y><w>60</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40;40;40</additional_attributes></element><element><id>Relation</id><coordinates><x>580</x><y>580</y><w>60</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40;40;40</additional_attributes></element><element><id>Relation</id><coordinates><x>660</x><y>580</y><w>60</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>40;10;40;40;10;40</additional_attributes></element></diagram>

@@ -31,7 +31,7 @@ void moveElevator(motorState dir,int floorReq) //move to servo dingus
 
 void writeServo(motorState dir,int motorSpeed,bool disable)
 {
-    unisgned long timeAccStart = millis(); //start of acceleration
+    unsigned long timeAccStart = millis(); //start of acceleration
     digitalWrite(phase, LOW); //why?
     analogWrite(enable,motorSpeed); //enable motor
     delay(2000); //replace with us time or milis

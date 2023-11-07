@@ -1,14 +1,19 @@
-<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLSpecialState</id><coordinates><x>400</x><y>20</y><w>20</w><h>20</h></coordinates><panel_attributes>type=initial</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>400</x><y>30</y><w>30</w><h>60</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;40</additional_attributes></element><element><id>UMLState</id><coordinates><x>370</x><y>70</y><w>90</w><h>40</h></coordinates><panel_attributes>First floor</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>400</x><y>100</y><w>30</w><h>80</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>UMLState</id><coordinates><x>650</x><y>210</y><w>160</w><h>100</h></coordinates><panel_attributes>Prepare down
+<diagram program="umletino" version="15.1"><zoom_level>9</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLSpecialState</id><coordinates><x>396</x><y>52</y><w>18</w><h>18</h></coordinates><panel_attributes>type=initial</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>396</x><y>61</y><w>27</w><h>54</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;40</additional_attributes></element><element><id>UMLState</id><coordinates><x>369</x><y>97</y><w>81</w><h>36</h></coordinates><panel_attributes>First floor</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>396</x><y>124</y><w>27</w><h>72</h></coordinates><panel_attributes>lt=-&gt;</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>UMLState</id><coordinates><x>621</x><y>223</y><w>144</w><h>90</h></coordinates><panel_attributes>Prepare down
 --
 close door
 set servoState down
-
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLState</id><coordinates><x>10</x><y>210</y><w>160</w><h>100</h></coordinates><panel_attributes>Prepare up
+--
+downFunc()
+checkDoor()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLState</id><coordinates><x>45</x><y>223</y><w>144</w><h>90</h></coordinates><panel_attributes>Prepare up
 --
 close door
 set servoState up
+--
+upFunc()
+checkDoor()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLState</id><coordinates><x>234</x><y>286</y><w>369</w><h>396</h></coordinates><panel_attributes>
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLState</id><coordinates><x>220</x><y>280</y><w>410</w><h>360</h></coordinates><panel_attributes>
+
+
 
 
 
@@ -30,7 +35,7 @@ set servoState up
 
 
 --
-																																										Moving algorithm</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLState</id><coordinates><x>360</x><y>550</y><w>90</w><h>30</h></coordinates><panel_attributes>Moving</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>440</x><y>300</y><w>330</w><h>430</h></coordinates><panel_attributes>
+																																										Moving algorithm</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLState</id><coordinates><x>360</x><y>529</y><w>81</w><h>27</h></coordinates><panel_attributes>Moving</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>432</x><y>304</y><w>342</w><h>369</h></coordinates><panel_attributes>
 
 ready-to-move
 
@@ -41,29 +46,31 @@ ready-to-move
 
 
 
-lt=-&gt;</panel_attributes><additional_attributes>280;10;280;270;10;270</additional_attributes></element><element><id>Relation</id><coordinates><x>70</x><y>300</y><w>310</w><h>310</h></coordinates><panel_attributes>lt=-&gt;
+lt=-&gt;</panel_attributes><additional_attributes>280;10;280;340;10;340</additional_attributes></element><element><id>Relation</id><coordinates><x>117</x><y>304</y><w>261</w><h>324</h></coordinates><panel_attributes>lt=-&gt;
 
 
-ready-to-move</panel_attributes><additional_attributes>30;10;30;270;90;270;70;270;290;270</additional_attributes></element><element><id>UMLState</id><coordinates><x>360</x><y>480</y><w>90</w><h>30</h></coordinates><panel_attributes>Stopping</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>400</x><y>500</y><w>230</w><h>70</h></coordinates><panel_attributes>Approaching requested floor / Stop
-lt=-&gt;</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>400</x><y>430</y><w>150</w><h>70</h></coordinates><panel_attributes>Stopped / Open door
-lt=-&gt;</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>UMLState</id><coordinates><x>360</x><y>410</y><w>90</w><h>30</h></coordinates><panel_attributes>Door opening</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>400</x><y>360</y><w>170</w><h>70</h></coordinates><panel_attributes>Door opened / start timer
-lt=-&gt;</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>400</x><y>210</y><w>110</w><h>130</h></coordinates><panel_attributes>
+ready-to-move</panel_attributes><additional_attributes>10;10;10;340;10;220;10;340;270;340</additional_attributes></element><element><id>UMLState</id><coordinates><x>360</x><y>466</y><w>81</w><h>27</h></coordinates><panel_attributes>Stopping</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>396</x><y>484</y><w>207</w><h>63</h></coordinates><panel_attributes>Approaching requested floor / Stop
+lt=-&gt;</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>396</x><y>421</y><w>135</w><h>63</h></coordinates><panel_attributes>Stopped / Open door
+lt=-&gt;</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>UMLState</id><coordinates><x>360</x><y>403</y><w>81</w><h>27</h></coordinates><panel_attributes>Door opening</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>396</x><y>358</y><w>153</w><h>63</h></coordinates><panel_attributes>Door opened / start timer
+lt=-&gt;</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>396</x><y>223</y><w>99</w><h>117</h></coordinates><panel_attributes>
 
 
 After timeout 
-lt=-&gt;</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>UMLState</id><coordinates><x>310</x><y>320</y><w>210</w><h>50</h></coordinates><panel_attributes>At floor
+lt=-&gt;</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>UMLState</id><coordinates><x>315</x><y>322</y><w>189</w><h>45</h></coordinates><panel_attributes>At floor
 --
-remove current floor from queue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLState</id><coordinates><x>320</x><y>160</y><w>200</w><h>60</h></coordinates><panel_attributes>Idle
+remove current floor from queue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLState</id><coordinates><x>324</x><y>178</y><w>180</w><h>54</h></coordinates><panel_attributes>Idle
 --
-add desired floor to queue array</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>430</x><y>210</y><w>240</w><h>70</h></coordinates><panel_attributes>lt=-&gt;
+add desired floor to queue array</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>423</x><y>223</y><w>216</w><h>63</h></coordinates><panel_attributes>lt=-&gt;
 
 
-downState [queue(0) &lt; curFloor ]</panel_attributes><additional_attributes>10;10;10;30;220;30</additional_attributes></element><element><id>Relation</id><coordinates><x>160</x><y>210</y><w>240</w><h>70</h></coordinates><panel_attributes>lt=-&gt;
+downState [queue(0) &lt; curFloor ]</panel_attributes><additional_attributes>10;10;10;30;220;30</additional_attributes></element><element><id>Relation</id><coordinates><x>180</x><y>223</y><w>216</w><h>63</h></coordinates><panel_attributes>lt=-&gt;
 
 
-upState [queue(0) &gt; curFloor ]</panel_attributes><additional_attributes>220;10;220;30;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>150</x><y>100</y><w>210</w><h>120</h></coordinates><panel_attributes>Don't move [ desFloor = curFloor ]
+upState [queue(0) &gt; curFloor ]</panel_attributes><additional_attributes>220;10;220;30;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>171</x><y>124</y><w>189</w><h>108</h></coordinates><panel_attributes>Don't move [ desFloor = curFloor ]
 
 
 
 
-lt=-&gt;</panel_attributes><additional_attributes>110;100;80;100;80;20;190;20;190;60</additional_attributes></element><element><id>Relation</id><coordinates><x>230</x><y>180</y><w>110</w><h>40</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;20;90;20</additional_attributes></element></diagram>
+lt=-&gt;</panel_attributes><additional_attributes>110;100;80;100;80;20;190;20;190;60</additional_attributes></element><element><id>Relation</id><coordinates><x>243</x><y>196</y><w>99</w><h>36</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;20;90;20</additional_attributes></element><element><id>UMLState</id><coordinates><x>360</x><y>592</y><w>81</w><h>27</h></coordinates><panel_attributes>Accelerating
+1.2 m/s^2</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>396</x><y>547</y><w>99</w><h>63</h></coordinates><panel_attributes>reached 1 m/s
+lt=-&gt;</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element></diagram>

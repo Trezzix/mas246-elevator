@@ -1,69 +1,68 @@
-int buttonNumber;
-bool buttonState;
-int ledNumber;
-bool ledState;
+using namespace HMIvars;
 
-enum floors
-{
-    firstUp,
-    secondUp,
-    secondDown,
-    thirdUp,
-    thirdDown,
-    fourthDown,
-    first,
-    second,
-    third,
-    fourth,
-    none
-};
-
-floors buttonRead()
+enumFloors buttonRead(const int _buttonPress)
 {
     //change later to Q = up floor 1, W
-    if (serial.Read('1'))
+    switch (_buttonPress)
     {
-        return first;
+        case '1':
+        {
+            return first;
+            break;
+        }
+        case '2':
+        {
+            return second;
+            break;
+        }
+        case '3':
+        {
+            return third;
+            break;
+        }
+        case '4':
+        {
+            return fourth;
+            break;
+        }
+        case 'q':
+        {
+            return firstUp;
+            break;
+        }
+        case 'w':
+        {
+            return secondUp;
+            break;
+        }
+        case 's':
+        {
+            return secondDown;
+            break;
+        }
+        case 'e':
+        {
+            return thirdUp;
+            break;
+        }
+        case 'd':
+        {
+            return thirdDown;
+            break;
+        }
+        case 'f':
+        {
+            return fourthDown;
+            break;
+        }
+        default:
+        {
+            return none;    
+        }
     }
-    else if (serial.Read('2'))
-    {
-        return second;
-    }
-    else if (serial.Read('3'))
-    {
-        return third;
-    }
-    else if (serial.Read('4'))
-    {
-        return fourth;
-    }
-    else if (serial.Read('Q')) // up, floor 1...
-    {
-        return firstUp;
-    }
-    else if (serial.Read('W')) // up, floor 2...
-    {
-        return secondUp;
-    }
-    else if (serial.Read('S')) // down, floor 2...
-    {
-        return secondDown;
-    }
-    else if (serial.Read('E')) // up, floor 3...
-    {
-        return thirdUp;
-    }
-    else if (serial.Read('D')) // down, floor 3...
-    {
-        return thirdDown;
-    }
-    else if (serial.Read('F')) // down, floor 4...
-    {
-        return fourthDown;
-    }
-    return none;
 }
+
 void ledWrite()
 {
-
+  
 }

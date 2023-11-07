@@ -1,6 +1,7 @@
 using namespace stepperVars;
 
-void stepperInit() //does nothing?
+//initialize need to be in same file or it cant run from setup() -__-
+void stepperInit()
 {
   pinMode(_A, OUTPUT);
   pinMode(_B, OUTPUT);
@@ -8,37 +9,6 @@ void stepperInit() //does nothing?
   pinMode(_B_phase, OUTPUT);
   dac_init();
   set_dac(4095,4095);//IA per motor phase
-}
-
-void moveDoor(motorState dir) //dir: up = open, down = close //should be moved to stepper?
-{
-  stepperVars::doorCur = doorHalf;
-  stepperVars::currentStep = writeStepper(dir,20,stepperVars::currentStep,10000); //speed, acceleration
-  if(dir == up)
-  {
-    stepperVars::doorCur = doorClosed;
-  }
-  else
-  {
-    stepperVars::doorCur = doorOpen;
-  }
-  
-}
-
-void closeDoorFunc()
-{
-  //close doors:
-  stepperVars::doorCur = doorHalf;
-  stepperVars::currentStep = writeStepper(down,10,stepperVars::currentStep,2500);
-  stepperVars::doorCur = doorClosed;
-}
-
-void openDoorFunc()
-{
-  //close doors:
-  stepperVars::doorCur = doorHalf;
-  stepperVars::currentStep = writeStepper(up,10,stepperVars::currentStep,2500);
-  stepperVars::doorCur = doorOpen;
 }
 
 uint8_t writeStepper(const motorState dir,int stepps,const int curStepp,const int steppDelay_us)
