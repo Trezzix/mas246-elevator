@@ -61,7 +61,7 @@ void setup() {
   Serial.begin(9600);
   servoInit();
   servoEncoderInit();
-  currentFloor = 3;
+  currentFloor = 2;
   currentHeight = currentFloor * servoVars::floorDist;
   
 }
@@ -70,9 +70,11 @@ void loop() {
   // put your main code here, to run repeatedly:
   if (a)
   {
-    moveElevator(up,1);
-    delay(500);
-    analogWrite(servoVars::enable,0);
+    int elevatormove123 = moveElevator(up,1);
+    if (elevatormove123 == 1)
+    {
+      Serial.println("move completed");
+    }
     
     float temp = static_cast<float>( readServoPosition() ) / sensorVars::cps;
     //Serial.print(" servo pos: ");
