@@ -1,0 +1,70 @@
+int writeServo(motorState dir,int motorSpeed,moveType moveState)
+{
+  float tx = 0;
+  float motorSpeedReal = 0.0; //remove motorSpeed?
+  int motorSpeedPWM = 0;
+  unsigned long timeAccStart;
+  float temp = 0;
+
+  digitalWrite(phase, LOW); //why?
+  switch (dir)
+  {
+    case up: //winding
+    {
+      digitalWrite(phase,LOW);
+      break;
+    }
+    case down:
+    {
+      digitalWrite(phase,HIGH);
+      break;
+    }
+  }
+  
+    switch (moveState)
+    {
+      case accelerate: //accelerates to 1m/s without reading sensor, bad?
+      {
+        Serial.println("accelerate case hit");
+        timeAccStart = millis(); //start of acceleration
+        
+        while (motorSpeedReal <= elevatorSpeed)
+        {         
+          tx = (static_cast<float>(millis() - timeAccStart))/1000.0; //current time minus start of acceleration, convert to s
+          motorSpeedReal = (elevatorAcc * tx);
+          motorSpeedPWM = static_cast<int>(motorSpeedReal * motorSpeedMax); //float * int, ugly  
+          
+          Serial.print("tx (s): ");
+          Serial.print(tx);
+          Serial.print(" float (m/s): ");
+          Serial.print(motorSpeedReal);
+          Serial.print(" pwm: ");
+          Serial.print(motorSpeedPWM);
+          temp = static_cast<float>(readServoPosition()) / sensorVars::cps;
+          Serial.print(" servo pos: ");
+          Serial.println( temp );
+          
+          analogWrite(enable,motorSpeedPWM);
+        }
+        
+        return motorSpeedPWM;
+      }
+      case constMove: //read sensor until approaching floor
+      {
+        while (true)
+        {
+          
+        }
+        return motorSpeedPWM;
+        break;
+      }
+      case stopMove:
+      {
+        delay(2000);
+        //analogWrite(enable,0); //stop motor
+        return 0;
+        break;
+      }
+    }
+    return 0;
+}
