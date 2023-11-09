@@ -8,37 +8,26 @@ void stepperInit() //does nothing?
   pinMode(_B_phase, OUTPUT);
   dac_init();
   set_dac(4095,4095);//IA per motor phase
-  currentStep = 0;
 }
 
 void moveDoor(motorState dir) //dir: up = open, down = close //should be moved to stepper?
 {
-  doorCur = doorHalf;
-  currentStep = writeStepper(dir,5,currentStep,10000); //speed, acceleration
-  if(dir == up)
+  doorCur = doorHalf; // dosent really do anything...
+  switch (dir)
   {
-    doorCur = doorClosed;
-  }
-  else
-  {
-    doorCur = doorOpen;
-  }
-  
-}
-
-void closeDoor()
-{
-  //close doors:
-  doorCur = doorHalf;
-  currentStep = writeStepper(up,20,currentStep,100000);
-  doorCur = doorClosed;
-}
-
-void openDoor()
-{
-  //close doors:
-  doorCur = doorHalf;
-  currentStep = writeStepper(up,10,stepperVars::currentStep,2500);
+    case up:
+    {
+      currentStep = writeStepper(dir,200,currentStep,5000);
+      doorCur = doorClosed;
+      break;
+    }
+    case down:
+    {
+      currentStep = writeStepper(dir,200,currentStep,5000);
+      doorCur = doorOpen;
+      break;
+    }
+  }  
 }
 
 uint8_t writeStepper(const motorState dir,int stepps,const int curStepp,const int steppDelay_us)
@@ -63,17 +52,14 @@ uint8_t writeStepper(const motorState dir,int stepps,const int curStepp,const in
     {
       case 0:
       {
-        Serial.println("ran stepp 1");
         digitalWrite(_A, HIGH); //step 1
         digitalWrite(_A_phase, LOW);
         digitalWrite(_B, HIGH);
         digitalWrite(_B_phase, LOW);
-        doorCur = doorOpen;
         break;
       }
       case 1:
       {
-        Serial.println("ran stepp 2");
         digitalWrite(_A, HIGH); //step 2
         digitalWrite(_A_phase, LOW);
         digitalWrite(_B, HIGH);
@@ -82,7 +68,6 @@ uint8_t writeStepper(const motorState dir,int stepps,const int curStepp,const in
       }
       case 2:
       {
-        Serial.println("ran stepp 3");
         digitalWrite(_A, HIGH); //step 3
         digitalWrite(_A_phase, HIGH);
         digitalWrite(_B, HIGH);
@@ -91,7 +76,6 @@ uint8_t writeStepper(const motorState dir,int stepps,const int curStepp,const in
       }
       case 3:
       {
-        Serial.println("ran stepp 4");
         digitalWrite(_A, HIGH); //step 4
         digitalWrite(_A_phase, HIGH);
         digitalWrite(_B, HIGH);
@@ -100,7 +84,7 @@ uint8_t writeStepper(const motorState dir,int stepps,const int curStepp,const in
       }
     }
 
-    switch(dir)
+    switch(dir) 
     {
       case up:
       {
@@ -113,17 +97,8 @@ uint8_t writeStepper(const motorState dir,int stepps,const int curStepp,const in
         break;
       }
     }
-    Serial.println(stepps);
     stepps--;
     delayMicroseconds(steppDelay_us);
   }
   return steppNum; //steppNum = ny curStepp
-}
-
-void tempDoorDisable()
-{
-  digitalWrite(_A, LOW); //step 4
-  digitalWrite(_A_phase, LOW);
-  digitalWrite(_B, LOW);
-  digitalWrite(_B_phase, LOW);
 }

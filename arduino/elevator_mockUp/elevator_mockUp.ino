@@ -110,6 +110,7 @@ void setup() {
   stepperInit();  
   servoInit();
   servoEncoderInit();
+  delay(2000);
   
   elevator = first_Floor;
 }
@@ -128,34 +129,60 @@ void loop() {
     case idle:
     {
       //if doors are closed, open them
-      if (gotoFloor > currentFloor)
+      if (stepperVars::doorCur == doorClosed)
       {
-        elevator = prepare_up;
-        elevatorDir = up;
-      }
-      else if (gotoFloor < currentFloor)
-      {
-        elevator = prepare_down;
-        elevatorDir = down;
+        delay(2000);
+        moveDoor(down); // open doors
+        delay(1000);
       }
       else
       {
-        //do nothing
+       if (gotoFloor > currentFloor)
+        {
+          elevator = prepare_up;
+          elevatorDir = up;
+        }
+        else if (gotoFloor < currentFloor)
+        {
+          elevator = prepare_down;
+          elevatorDir = down;
+        }
+        else
+        {
+          //do nothing
+        }
       }
       break;
     }
     case prepare_up: // set a direction as up or down
     {
       Serial.println("moving up");
-      //moveDoor(up); // close doors
-      elevator = moving_algorithm;
+      if (stepperVars::doorCur == doorClosed)
+      {
+        elevator = moving_algorithm;
+      }
+      else
+      {
+        delay(1000);
+        moveDoor(up); // close doors
+        delay(2000);
+      }
       break;
     }
     case prepare_down:
     {
       Serial.println("moving down");
-      //moveDoor(up); //close doors
-      elevator = moving_algorithm;
+      if (stepperVars::doorCur == doorClosed)
+      {
+        elevator = moving_algorithm;
+      }
+      else
+      {
+        delay(1000);
+        moveDoor(up); // close doors
+        delay(2000);
+      }
+      
       break;
     }
     case moving_algorithm:
