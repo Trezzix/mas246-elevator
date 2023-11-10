@@ -37,7 +37,9 @@ enum elevatorState
     idle,
     prepare_up,
     prepare_down,
-    moving_algorithm //?
+    moving_algorithm,
+    moving_up, //used for other variable
+    moving_down
    };
 
 namespace stepperVars
@@ -60,7 +62,7 @@ namespace servoVars
   const int decay = 5; // should be defined?
   float elevatorAcc = 1.2; //m/s^2
   float elevatorSpeed = 1.0; //m/s
-  float floorDist = 5.0; //m
+  float floorDist = 5.0; //m //why is this in servoVars??????????
   float meterPerRot = 1; //m/rotation
   float maxRPS = (11500.0/131.0)/60.0; //rps of weight at 255 PWM, 
   float speedDot = 0; 
@@ -89,6 +91,7 @@ namespace HMIvars
    
 //global variables:
   elevatorState elevator;
+  elevatorState elevatorDir;
   int currentFloor;
   motorState elevatorDir; //move to servoVars namespace
   float currentHeight; //move to servoVars namespace
@@ -220,7 +223,7 @@ void loop() {
       if (buttonPressed != none)
       {
           queueSystem(buttonPressed);
-          Serial.print("button: moving to floor: ");
+          Serial.print("button pressed for floor: ");
           Serial.println(gotoFloor);
           //write input:
       }
@@ -234,6 +237,7 @@ void posPlot()
 
 void queueSystem(enumFloors desiredFloor)
 {
+
   //temporary, very simple, ignores multiple key presses only looks at newest press and goes to that floor
   switch (desiredFloor)
   {

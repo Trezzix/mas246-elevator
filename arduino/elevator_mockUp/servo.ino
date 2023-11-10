@@ -33,7 +33,7 @@ void servoInit()
   motorSpeedMax = static_cast<int>((elevatorSpeed/maxRPS)*255.0); //174
 }
 
-int moveElevator(motorState dir,const int floorReq) //tell servo what to do, dir useless?
+int moveElevator(motorState dir,const int floorReq) //tell servo what to do, dir useless? //change floorReq to a pointer so it can be changed during the loop
 {
   //protection so not going up when floor is below or vice-versa? does it need to know the floor?
   float output = 0.0;
@@ -110,7 +110,7 @@ int moveElevator(motorState dir,const int floorReq) //tell servo what to do, dir
           servoTypeState = servoMoveType::servoPID;
         }
     }
-    while(servoTypeState == servoMoveType::servoPID) //control with PID of position to :
+    while(servoTypeState == servoMoveType::servoPID) //control with PID of position to : //switch to switch case instead of 2 very similar while loops
       {
         sensorVars::heightMoved =((static_cast<float>( readServoPosition() ) / sensorVars::cps) * meterPerRot); //10 rotations for 5m moved  
         currentHeight = sensorVars::heightMoved + (1.0 * floorDist);//add initial floor, should be a variable
