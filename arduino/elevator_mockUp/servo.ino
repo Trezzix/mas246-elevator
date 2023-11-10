@@ -33,7 +33,7 @@ void servoInit()
   motorSpeedMax = static_cast<int>((elevatorSpeed/maxRPS)*255.0); //174
 }
 
-int moveElevator(motorState dir,const int floorReq) //tell servo what to do, dir useless? //change floorReq to a pointer so it can be changed during the loop
+int moveElevator(enumElevatorDir dir,const int floorReq) //tell servo what to do, dir useless? //change floorReq to a pointer so it can be changed during the loop
 {
   //protection so not going up when floor is below or vice-versa? does it need to know the floor?
   float output = 0.0;
@@ -56,12 +56,12 @@ int moveElevator(motorState dir,const int floorReq) //tell servo what to do, dir
     switch (dir)
     {
       //do stuffs depending on direction
-      case up:
+      case elevUp:
       {
         accDir = 1;
         break;
       }
-      case down:
+      case elevDown:
       {
         accDir = -1;
         break;
@@ -109,6 +109,7 @@ int moveElevator(motorState dir,const int floorReq) //tell servo what to do, dir
           Serial.println("starting PID");
           servoTypeState = servoMoveType::servoPID;
         }
+      checkButton();
     }
     while(servoTypeState == servoMoveType::servoPID) //control with PID of position to : //switch to switch case instead of 2 very similar while loops
       {
@@ -169,6 +170,7 @@ int moveElevator(motorState dir,const int floorReq) //tell servo what to do, dir
             endingMove = false;
           }
         }
+      checkButton();
     }
     analogWrite(enable,0); //servo elevator
     return floorReq;

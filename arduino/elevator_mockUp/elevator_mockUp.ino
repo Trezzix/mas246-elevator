@@ -2,19 +2,12 @@
 
 //define pins
 
-enum enumFloors
+enum enumElevatorDir
 {
-    firstUp,
-    secondUp,
-    secondDown,
-    thirdUp,
-    thirdDown,
-    fourthDown,
-    first,
-    second,
-    third,
-    fourth,
-    none
+  elevUp,
+  elevDown,
+  elevNeither,
+  reqInternal //internal request is independent of direction
 };
 
 enum doorState
@@ -41,6 +34,12 @@ enum elevatorState
     moving_up, //used for other variable
     moving_down
    };
+
+struct buttonPressType
+{
+  enumElevatorDir bRequestDir;
+  int8_t floorNum;
+};
 
 namespace stepperVars
 {  
@@ -91,29 +90,36 @@ namespace HMIvars
    
 //global variables:
   elevatorState elevator;
-  elevatorState elevatorDir;
+  enumElevatorDir elevatorMoveDir;
   int currentFloor;
-  motorState elevatorDir; //move to servoVars namespace
   float currentHeight; //move to servoVars namespace
-  enumFloors buttonPressed; //move to HMI namespace
   int gotoFloor;//temporary, change for future queue system
   unsigned long timeBegin = millis(); //for time keeping
+  int8_t elevatorRequestsCurrent[10];
+  int8_t elevatorRequestsAlt[10];
 //buttons
 
 //function prototypes:
-enumFloors buttonRead(const int _buttonPress);
+buttonPressType buttonRead(const int _buttonPress);
+void checkButton();
 void stepperInit();
 void servoInit();
 void servoEncoderInit();
 float writeServo(float motorSpeedPerc, int motorPrev, unsigned long dt);
    
 void setup() {
+  for(int i = 0; i < 10; i++)
+  {
+    elevatorRequestsCurrent[i] = -1;
+    elevatorRequestsAlt[i] = -1;
+  }
   // put your setup code here, to run once:
   Serial.begin(9600);
   stepperInit();  
   servoInit();
   servoEncoderInit();
   delay(2000);
+  Serial.println("elevator ready at floor 1");
   
   elevator = first_Floor;
 }
@@ -143,12 +149,12 @@ void loop() {
        if (gotoFloor > currentFloor)
         {
           elevator = prepare_up;
-          elevatorDir = up;
+          elevatorMoveDir = elevUp;
         }
         else if (gotoFloor < currentFloor)
         {
           elevator = prepare_down;
-          elevatorDir = down;
+          elevatorMoveDir = elevDown;
         }
         else
         {
@@ -193,7 +199,7 @@ void loop() {
       //none right now, just go to floor
       Serial.print("gotoFloor: ");
       Serial.print(gotoFloor);
-      int elevatormove123 = moveElevator(elevatorDir,gotoFloor); //what does dir even do here....
+      int elevatormove123 = moveElevator(elevatorMoveDir,gotoFloor); //what does dir even do here....
       if (elevatormove123 > 0)
       {
         currentFloor = elevatormove123;
@@ -212,54 +218,20 @@ void loop() {
        break;
     }
   }
-  
-  //check buttons: put all in buttonRead func?
-  if (Serial.available() > 0) //char "10" = enter, can be ignored
-    {
-      // read the incoming byte:
-      HMIvars::buttonPress = Serial.read();
-      buttonPressed = buttonRead(HMIvars::buttonPress);
 
-      if (buttonPressed != none)
-      {
-          queueSystem(buttonPressed);
-          Serial.print("button pressed for floor: ");
-          Serial.println(gotoFloor);
-          //write input:
-      }
-    }
+  clearRequest();
+  checkButton();
+  if (elevatorRequestsCurrent[0] != -1)
+  {
+    gotoFloor = elevatorRequestsCurrent[0]; //needs to be a pointer so dynamically changed during moves
+  }
+  else
+  {
+    gotoFloor = currentFloor;
+  }
 }
 
 void posPlot()
 {
 
-}
-
-void queueSystem(enumFloors desiredFloor)
-{
-
-  //temporary, very simple, ignores multiple key presses only looks at newest press and goes to that floor
-  switch (desiredFloor)
-  {
-    case first: case firstUp:
-    {
-      gotoFloor = 1;
-      break;
-    }
-    case second: case secondUp: case secondDown:
-    {
-      gotoFloor = 2;
-      break;
-    }
-    case third: case thirdUp: case thirdDown:
-    {
-      gotoFloor = 3;
-      break;
-    }
-    case fourth: case fourthDown:
-    {
-      gotoFloor = 4;
-      break;
-    }
-  }
 }

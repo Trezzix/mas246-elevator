@@ -2,6 +2,7 @@ enum elevatorDir
 {
   elevUp,
   elevDown,
+  elevNeither,
   reqInternal //internal request is independent of direction
 };
 
