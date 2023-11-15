@@ -250,7 +250,39 @@ void loop() {
   }
 }
 
-void posPlot()
+void posPlot(float currentHeight,float error,float u)
 {
+  Serial.print("currentHeight:");
+  Serial.print(currentHeight);
+  Serial.print(",");
+  
+  //Serial.print("currentHeight:");
+  //Serial.print(currentHeight);
+  //Serial.print(",");
 
+  //Serial.print("height_moved:");
+  //Serial.print(sensorVars::heightMoved);
+  //Serial.print(",");
+
+  Serial.print("error:");
+  Serial.print(error);
+  Serial.print(",");
+
+  Serial.print("motor_input:");
+  Serial.print(u);
+  Serial.print(",");
+}
+void posPlot(float motorSpeedPerc, float speedDot)
+{
+  Serial.print("motorSpeedPerc");
+  Serial.print(motorSpeedPerc);
+  Serial.print(",");
+  Serial.print("speedDot:");
+  Serial.print(speedDot); //m/s^2
+  Serial.print(",");
+}
+void posPlot(float output)
+{
+  Serial.print("current_speed:");
+  Serial.println(output);
 }

@@ -33,9 +33,8 @@ void servoInit()
   motorSpeedMax = static_cast<int>((elevatorSpeed/maxRPS)*255.0); //174
 }
 
-int moveElevator(enumElevatorDir dir,int floorReq2) //tell servo what to do, dir useless? //change floorReq to a pointer so it can be changed during the loop
+int moveElevator(enumElevatorDir dir,const int floorReq) //tell servo what to do, dir useless? //change floorReq to a pointer so it can be changed during the loop
 {
-  floorReq = floorReq2; // for changing while moving
   //protection so not going up when floor is below or vice-versa? does it need to know the floor?
   float output = 0.0;
   float tx = 0;
@@ -72,102 +71,42 @@ int moveElevator(enumElevatorDir dir,int floorReq2) //tell servo what to do, dir
     //Serial.println("moving");
     timeAccStart = millis();
     //sensorVars::heightMoved = 0.0; //dosent do anything because servo read gives exact pos after start, not relative
-    Serial.println("accelerating");
-    while(servoTypeState == servoMoveType::servoAcc)
-    {
-      //purely used for printing:
-      sensorVars::heightMoved =((static_cast<float>( readServoPosition() ) / sensorVars::cps) * meterPerRot); //10 rotations for 5m moved  
-      currentHeight = sensorVars::heightMoved;//add initial floor, should be a variable
-      Serial.print("currentHeight:");
-      Serial.print(currentHeight);
-      Serial.print(",");
-      
-      tx = (static_cast<float>(millis() - timeAccStart))/1000.0; //current time minus start of acceleration, convert to s
-      dt = (tx - tx_prev);//float because used in calcs
-      error = (static_cast<float>(floorReq) * floorDist) - currentHeight - floorDist; //converted to m 
-      Serial.print("error:");
-      Serial.print(error);
-      Serial.print(",");
-         
-      //Serial.print(" tx (s): ");
-      //Serial.print(tx);
-      Serial.print("motor_input:");
-      Serial.print(u);
-      Serial.print(",");
-          
-      //analogWrite(enable,motorSpeedPWM);
-      output = writeServo(u,output,dt);
-
-      Serial.print("current_speed:");
-      Serial.println(output);
-
-      tx_prev = tx;
-      //once accelerated to speed, start PID control
-      if (abs(u) >= elevatorSpeed)
-        {
-          Serial.println("starting PID");
-          servoTypeState = servoMoveType::servoPID;
-        }
-      checkButton();
-    }
+    Serial.println("Accelerating");
     while(servoTypeState == servoMoveType::servoPID || servoTypeState == servoMoveType::servoAcc) //control with PID of position to : //switch to switch case instead of 2 very similar while loops
       {
-        //shared variables:
         sensorVars::heightMoved =((static_cast<float>( readServoPosition() ) / sensorVars::cps) * meterPerRot); //10 rotations for 5m moved  
         currentHeight = sensorVars::heightMoved;//add initial floor, should be a variable
+        tx = (static_cast<float>(millis() - timeAccStart))/1000.0;
+        //tx = (static_cast<float>(millis() - timeAccStart)); //time between start and now
+        dt = (tx - tx_prev);//converted to s, float because used in calcs
 
-        tx = (static_cast<float>(millis() - timeAccStart)); //time between start and now
-        dt = (tx - tx_prev)/1000.0;//converted to s, float because used in calcs
-
-        error = (static_cast<float>(floorReq) * floorDist) - currentHeight -floorDist; //converted to m 
+        error = (static_cast<float>(floorReq) * floorDist) - currentHeight - floorDist; //converted to m 
         errorDot = (error - errorPrev)/dt;
         errorInt += (error-errorPrev) * dt;
 
-        switch(servoTypeState) //movement types:
+        switch (servoTypeState)  //movement types:
         {
-          case servoMoveType::servoAcc:
-          {
-            u = ((elevatorAcc * tx ) / elevatorSpeed) * accDir; //function for acceleration then converted to 0-1
-
-            if (abs(u) >= elevatorSpeed)
-            {
-              Serial.println("starting PID");
-              servoTypeState = servoMoveType::servoPID;
-            }
-
-            
-          }
-          case servoMoveType::servoPID:
-          {
-            u = (kp * error) + (ki * errorInt) + (kd * errorDot);
-          }
+          case servoAcc:
+           {
+             u = ((elevatorAcc * tx) / elevatorSpeed) * accDir;  //function for acceleration then converted to 0-1
+             //Serial.println(u);
+             if (abs(u) >= elevatorSpeed) {
+                Serial.println("starting PID");
+               servoTypeState = servoMoveType::servoPID;
+             }
+           }
+         case servoPID:
+           {
+             u = (kp * error) + (ki * errorInt) + (kd * errorDot);
+           }
         }
-
-        
-        Serial.print("currentHeight:");
-        Serial.print(currentHeight);
-        Serial.print(",");
-
-         //Serial.print("currentHeight:");
-        //Serial.print(currentHeight);
-        //Serial.print(",");
-
-        //Serial.print("height_moved:");
-         //Serial.print(sensorVars::heightMoved);
-        //Serial.print(",");
-
-        Serial.print("error:");
-        Serial.print(error);
-        Serial.print(",");
           
-        Serial.print("motor_input:");
-        Serial.print(u);
-        Serial.print(",");
+        //u = (kp * error) + (ki * errorInt) + (kd * errorDot);
+
+        posPlot(currentHeight,error,u);
           
         output = writeServo(u,output,dt); //input needs to be a derivative of position
-          
-        Serial.print("current_speed:");
-        Serial.println(output);
+        posPlot(output);
 
         errorPrev = error;
         tx_prev = tx;
@@ -222,27 +161,11 @@ float writeServo(float motorSpeedPerc, float motorPrev, float dt) //input: -1 to
   motorSpeedPWM = static_cast<int>(abs(motorSpeedPerc) * motorSpeedMax);
   
   //if (speedDot >= )
-  
-  Serial.print("motorSpeedPerc");
-  Serial.print(motorSpeedPerc);
-  Serial.print(",");
 
   speedDot = ((((motorSpeedPerc - motorPrev)*static_cast<float>(motorSpeedMax))/(dt)) / 255.0)*maxRPS;
-  Serial.print("speedDot:");
-  Serial.print(speedDot); //m/s^2
-  Serial.print(",");
+
+  posPlot(motorSpeedPerc,speedDot);
   
   analogWrite(enable,motorSpeedPWM);
   return motorSpeedPerc;
-}
-
-void servoPlot()
-{
-  Serial.print("currentHeight:");
-  Serial.print(currentHeight);
-  Serial.print(",");
-
-  Serial.print("error:");
-  Serial.print(error);
-  Serial.print(",");
 }
