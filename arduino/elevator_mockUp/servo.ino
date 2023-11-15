@@ -22,6 +22,7 @@ void servoInit()
 int moveElevator(enumElevatorDir dir) //tell servo what to do, dir useless? //change floorReq to a pointer so it can be changed during the loop
 {
   //protection so not going up when floor is below or vice-versa? does it need to know the floor?
+  bool joltFix = false;
   float output = 0.0;
   float tx = 0;
   float tx_prev = 0;
@@ -61,7 +62,7 @@ int moveElevator(enumElevatorDir dir) //tell servo what to do, dir useless? //ch
         floorReq = (elevatorRequestsCurrent[0]);
         sensorVars::heightMoved =((static_cast<float>( readServoPosition() ) / sensorVars::cps) * meterPerRot); //10 rotations for 5m moved  
         currentHeight = sensorVars::heightMoved;//add initial floor, should be a variable
-        tx = (static_cast<float>(millis() - timeAccStart))/1000.0;
+        tx = (static_cast<float>(millis() - timeAccStart))/1000.0; //ms
         dt = (tx - tx_prev);//converted to s, float because used in calcs
       
         error = (static_cast<float>(floorReq) * floorDist) - currentHeight - floorDist; //converted to m 
@@ -78,16 +79,27 @@ int moveElevator(enumElevatorDir dir) //tell servo what to do, dir useless? //ch
                 Serial.println("starting PID");
                servoTypeState = servoMoveType::servoPID;
              }
+             break;
            }
          case servoPID:
            {
-            if(checkButton()==1)
+            if(checkButton()==1 || joltFix)
             {
-              Serial.print("Floor request changed, moving to floor: ");
+              Serial.print("Floor request changed, moving to new floor: ");
               Serial.println(floorReq);
-              errorDot = 0; //to prevent jolting on error change
+              //to prevent jolting on floor change, the if statement turns off derivative on the 2nd run which removes the jolt as the error changes
+              if (joltFix == false)
+              {
+                joltFix = true;
+              }
+              else
+              {
+                joltFix = false;
+                errorDot = 0;
+              }
             }
-             u = (kp * error) + (ki * errorInt) + (kd * errorDot);
+            u = (kp * error) + (ki * errorInt) + (kd * errorDot);
+            break;
            }
         }
 

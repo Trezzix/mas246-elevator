@@ -61,11 +61,11 @@ namespace servoVars
   const int enable = 7;
   const int phase = 6;
   const int decay = 5; // should be defined?
-  float elevatorAcc = 1.2; //m/s^2
-  float elevatorSpeed = 1.0; //m/s
-  float floorDist = 5.0; //m //why is this in servoVars??????????
-  float meterPerRot = 1; //m/rotation
-  float maxRPS = (11500.0/131.0)/60.0; //rps of weight at 255 PWM, 
+  const float elevatorAcc = 1.2; //m/s^2
+  const float elevatorSpeed = 1.0; //m/s
+  const float floorDist = 5.0; //m //why is this in servoVars??????????
+  const float meterPerRot = 1; //m/rotation
+  const float maxRPS = (11500.0/131.0)/60.0; //rps of weight at 255 PWM, 
   float speedDot = 0;
   int floorReq;
 }
@@ -83,11 +83,9 @@ namespace sensorVars
 
 namespace HMIvars
 {
-    int buttonNumber;
     int buttonPress = 0;
-    bool buttonState;
-    int ledNumber;
-    bool ledState;
+    //int ledNumber;
+    //bool ledState;
     int LCD_Backlight = 4;
     LiquidCrystal lcd(41,40,37,36,35,34);
 }
@@ -177,13 +175,13 @@ void loop() {
       {
        if (gotoFloor > currentFloor)
         {
-          lcdDisplay(0,"Moving to: ",gotoFloor);
+          lcdDisplay(0,"Moving up to: ",gotoFloor);
           elevator = prepare_up;
           elevatorMoveDir = elevUp;
         }
         else if (gotoFloor < currentFloor)
         {
-          lcdDisplay(0,"Moving to: ",gotoFloor);
+          lcdDisplay(0,"Moving dw to: ",gotoFloor);
           elevator = prepare_down;
           elevatorMoveDir = elevDown;
         }

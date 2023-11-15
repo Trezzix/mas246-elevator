@@ -124,7 +124,7 @@ int queueSystem(buttonPressType desiredFloor)
                   || (((static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist) < ((PIDvars::error) + 1.0))) 
                   && (currentHeight < (static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist) )
         {
-          lcdDisplay(0,"Moving to: ",desiredFloor.floorNum);
+          lcdDisplay(0,"Moving up to: ",desiredFloor.floorNum);
           Serial.println("writing to main 2 (in move change)"); //correct if using pointers
           createQueue(true,true,desiredFloor);
           return 1;
@@ -150,7 +150,7 @@ int queueSystem(buttonPressType desiredFloor)
                   || (((static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist) < ((PIDvars::error) + 1.0))) 
                   && (currentHeight > (static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist) )
         {
-          lcdDisplay(0,"Moving to: ",desiredFloor.floorNum);
+          lcdDisplay(0,"Moving dw to: ",desiredFloor.floorNum);
           Serial.println("writing to main 4 (in move change)");
           createQueue(true,true,desiredFloor);
           return 1;

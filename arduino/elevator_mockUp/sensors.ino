@@ -1,8 +1,5 @@
 using namespace sensorVars;
 
-float servoPos;
-float stepperPos;
-
 void servoEncoderInit()
 {
   pinMode(encoderPinA, INPUT_PULLUP);
