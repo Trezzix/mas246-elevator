@@ -1,7 +1,7 @@
 //#include <LiquidCrystal.h>
 using namespace HMIvars;
 
-void checkButton()
+int checkButton()
 {
   if (Serial.available() > 0) //char "10" = enter, can be ignored
     {
@@ -16,11 +16,13 @@ void checkButton()
           Serial.print(buttonPressed2.floorNum);
           Serial.print(" with direction: ");
           Serial.println(buttonPressed2.bRequestDir);
-          queueSystem(buttonPressed2);
+          int a = queueSystem(buttonPressed2);
           //write input:
           printElevList();
+          return a;
       }
     }
+    return 0;
 }
 
 buttonPressType buttonRead(const int _buttonPress)
@@ -99,7 +101,7 @@ buttonPressType buttonRead(const int _buttonPress)
     return newButtonPress;
 }
 
-void queueSystem(buttonPressType desiredFloor)
+int queueSystem(buttonPressType desiredFloor)
 {
   
   if (desiredFloor.bRequestDir == elevatorMoveDir || desiredFloor.bRequestDir == reqInternal) //checks if same direction
@@ -111,33 +113,54 @@ void queueSystem(buttonPressType desiredFloor)
     {
       case elevUp:
       {
-        if(currentHeight > (static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist))
+        if(currentHeight > (static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist)
         {
           Serial.println("writing to alt 1");
           //write to alt
           createQueue(false,false,desiredFloor);
         }
+        //if within 1m of goal, to give PID time to slow down:
+        else if (((((static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist) > ((PIDvars::error) - 1.0))
+                  || (((static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist) < ((PIDvars::error) + 1.0))) 
+                  && (currentHeight < (static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist) )
+        {
+          lcdDisplay(0,"Moving to: ",desiredFloor.floorNum);
+          Serial.println("writing to main 2 (in move change)"); //correct if using pointers
+          createQueue(true,true,desiredFloor);
+          return 1;
+          //write to main 
+        }
         else
         {
-          Serial.println("writing to main 2"); //correct if using pointers
-          createQueue(true,true,desiredFloor);
-          //write to main 
+          Serial.println("writing to alt 5");
+          createQueue(false,true,desiredFloor);
+          //write to alt 
         }
         break;
       }
       case elevDown:
       {
-        if(currentHeight < (static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist))
+        if(currentHeight < (static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist)
         {
           Serial.println("writing to alt 3");
           //write to alt
           createQueue(false,false,desiredFloor);
         }
+        else if (((((static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist) > ((PIDvars::error) - 1.0))
+                  || (((static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist) < ((PIDvars::error) + 1.0))) 
+                  && (currentHeight > (static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist) )
+        {
+          lcdDisplay(0,"Moving to: ",desiredFloor.floorNum);
+          Serial.println("writing to main 4 (in move change)");
+          createQueue(true,true,desiredFloor);
+          return 1;
+          //write to main 
+        }
         else
         {
-          Serial.println("writing to main 4");
-          createQueue(true,true,desiredFloor);
-          //write to main 
+          Serial.println("writing to alt 6"); //correct if using pointers
+          createQueue(false,true,desiredFloor);
+          //write to alt 
         }
         break;
       }
@@ -165,9 +188,10 @@ void queueSystem(buttonPressType desiredFloor)
       }
     }
   }
+  return 0;
 }
 
-void createQueue(bool mainList,bool dir,buttonPressType desiredFloor)
+void createQueue(bool mainList,bool dir,buttonPressType desiredFloor) //dir, true = up, false = down
 {
   int i = 0;
   bool a = true;

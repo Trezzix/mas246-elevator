@@ -67,7 +67,7 @@ namespace servoVars
   float meterPerRot = 1; //m/rotation
   float maxRPS = (11500.0/131.0)/60.0; //rps of weight at 255 PWM, 
   float speedDot = 0;
-  float floorReq;
+  int floorReq;
 }
 
 namespace sensorVars
@@ -92,6 +92,19 @@ namespace HMIvars
     LiquidCrystal lcd(41,40,37,36,35,34);
 }
 
+namespace PIDvars //all float since used for calculation
+{
+  float error = 0;
+  float errorDot = 0;
+  float errorInt = 0;
+  float errorPrev = 0;
+
+  float kp = 4;
+  float ki = 0;
+  float kd = 1; //need to fix pid, ki breaks it..
+
+  float u = 0;
+}
    
 //global variables:
   elevatorState elevator;
@@ -106,7 +119,7 @@ namespace HMIvars
 
 //function prototypes:
 buttonPressType buttonRead(const int _buttonPress);
-void checkButton();
+int checkButton();
 void stepperInit();
 void servoInit();
 void servoEncoderInit();
@@ -213,10 +226,9 @@ void loop() {
     }
     case moving_algorithm:
     {
-
       Serial.print("gotoFloor: ");
       Serial.print(gotoFloor);
-      int elevatormove123 = moveElevator(elevatorMoveDir,gotoFloor); //what does dir even do here....
+      int elevatormove123 = moveElevator(elevatorMoveDir); //what does dir even do here....
       if (elevatormove123 > 0)
       {
         currentFloor = elevatormove123;
@@ -242,7 +254,7 @@ void loop() {
   checkButton();
   if (elevatorRequestsCurrent[0] != -1)
   {
-    gotoFloor = elevatorRequestsCurrent[0]; //needs to be a pointer so dynamically changed during moves
+    gotoFloor = elevatorRequestsCurrent[0];
   }
   else
   {
@@ -255,7 +267,7 @@ void posPlot(float currentHeight,float error,float u)
   Serial.print("currentHeight:");
   Serial.print(currentHeight);
   Serial.print(",");
-  
+
   //Serial.print("currentHeight:");
   //Serial.print(currentHeight);
   //Serial.print(",");

@@ -1,17 +1,3 @@
-namespace PIDvars //all float since used for calculation
-{
-  float error = 0;
-  float errorDot = 0;
-  float errorInt = 0;
-  float errorPrev = 0;
-
-  float kp = 4;
-  float ki = 0;
-  float kd = 1; //need to fix pid, ki breaks it..
-
-  float u = 0;
-}
-
 enum servoMoveType
 {
   servoAcc,
@@ -33,7 +19,7 @@ void servoInit()
   motorSpeedMax = static_cast<int>((elevatorSpeed/maxRPS)*255.0); //174
 }
 
-int moveElevator(enumElevatorDir dir,const int floorReq) //tell servo what to do, dir useless? //change floorReq to a pointer so it can be changed during the loop
+int moveElevator(enumElevatorDir dir) //tell servo what to do, dir useless? //change floorReq to a pointer so it can be changed during the loop
 {
   //protection so not going up when floor is below or vice-versa? does it need to know the floor?
   float output = 0.0;
@@ -67,19 +53,17 @@ int moveElevator(enumElevatorDir dir,const int floorReq) //tell servo what to do
         break;
       }
     }
-      
-    //Serial.println("moving");
+
     timeAccStart = millis();
-    //sensorVars::heightMoved = 0.0; //dosent do anything because servo read gives exact pos after start, not relative
     Serial.println("Accelerating");
     while(servoTypeState == servoMoveType::servoPID || servoTypeState == servoMoveType::servoAcc) //control with PID of position to : //switch to switch case instead of 2 very similar while loops
       {
+        floorReq = (elevatorRequestsCurrent[0]);
         sensorVars::heightMoved =((static_cast<float>( readServoPosition() ) / sensorVars::cps) * meterPerRot); //10 rotations for 5m moved  
         currentHeight = sensorVars::heightMoved;//add initial floor, should be a variable
         tx = (static_cast<float>(millis() - timeAccStart))/1000.0;
-        //tx = (static_cast<float>(millis() - timeAccStart)); //time between start and now
         dt = (tx - tx_prev);//converted to s, float because used in calcs
-
+      
         error = (static_cast<float>(floorReq) * floorDist) - currentHeight - floorDist; //converted to m 
         errorDot = (error - errorPrev)/dt;
         errorInt += (error-errorPrev) * dt;
@@ -97,15 +81,19 @@ int moveElevator(enumElevatorDir dir,const int floorReq) //tell servo what to do
            }
          case servoPID:
            {
+            if(checkButton()==1)
+            {
+              Serial.print("Floor request changed, moving to floor: ");
+              Serial.println(floorReq);
+              errorDot = 0; //to prevent jolting on error change
+            }
              u = (kp * error) + (ki * errorInt) + (kd * errorDot);
            }
         }
-          
-        //u = (kp * error) + (ki * errorInt) + (kd * errorDot);
 
         posPlot(currentHeight,error,u);
           
-        output = writeServo(u,output,dt); //input needs to be a derivative of position
+        output = writeServo(u,output,dt); //drive servo
         posPlot(output);
 
         errorPrev = error;
@@ -129,7 +117,7 @@ int moveElevator(enumElevatorDir dir,const int floorReq) //tell servo what to do
             endingMove = false;
           }
         }
-      checkButton();
+      
     }
     analogWrite(enable,0); //servo elevator
     return floorReq;
