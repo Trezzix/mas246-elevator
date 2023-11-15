@@ -1,3 +1,4 @@
+//#include <LiquidCrystal.h>
 using namespace HMIvars;
 
 void checkButton()
@@ -297,4 +298,28 @@ void ledWrite()
   
 }
 
+void lcdInit()
+{
+  pinMode(LCD_Backlight, OUTPUT);
+  analogWrite(LCD_Backlight,128);
+  lcd.begin(16,2);//set size of lcd
+  lcd.clear();
+}
+
+void lcdDisplay(const int y,const char lcdText[],const int floor) //y position, text (max 16 letters), floor number
+{
+  lcd.setCursor(0,y);
+  lcd.print("                ");//clear the line...
+  lcd.setCursor(0,y);
+  lcd.print(lcdText);
+  lcd.print(floor);
+}
+
+void lcdDisplay(const int y,const char lcdText[]) //y position and text, max 16 letters
+{
+  lcd.setCursor(0,y);
+  lcd.print("                ");//clear the line...
+  lcd.setCursor(0,y);
+  lcd.print(lcdText);
+}
 

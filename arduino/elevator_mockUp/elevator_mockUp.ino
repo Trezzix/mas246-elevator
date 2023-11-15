@@ -1,4 +1,6 @@
+#include <LiquidCrystal.h>
 #include <dac.h>
+
 
 //define pins
 
@@ -64,7 +66,8 @@ namespace servoVars
   float floorDist = 5.0; //m //why is this in servoVars??????????
   float meterPerRot = 1; //m/rotation
   float maxRPS = (11500.0/131.0)/60.0; //rps of weight at 255 PWM, 
-  float speedDot = 0; 
+  float speedDot = 0;
+  float floorReq;
 }
 
 namespace sensorVars
@@ -85,6 +88,8 @@ namespace HMIvars
     bool buttonState;
     int ledNumber;
     bool ledState;
+    int LCD_Backlight = 4;
+    LiquidCrystal lcd(41,40,37,36,35,34);
 }
 
    
@@ -115,6 +120,7 @@ void setup() {
   }
   // put your setup code here, to run once:
   Serial.begin(9600);
+  lcdInit();
   stepperInit();  
   servoInit();
   servoEncoderInit();
@@ -131,28 +137,40 @@ void loop() {
     {
      currentFloor = 1;
      gotoFloor = currentFloor;
-     currentHeight = static_cast<float>(currentFloor) * servoVars::floorDist;
+     currentHeight = (static_cast<float>(currentFloor) * servoVars::floorDist) - servoVars::floorDist;
+     lcdDisplay(0,"Floor: ",currentFloor);
+     lcdDisplay(1,"Door open");
      elevator = idle;
     break;
     }
     case idle:
     {
-      //if doors are closed, open them
-      if (stepperVars::doorCur == doorClosed)
+      if (currentFloor == 1)
+      {
+        elevatorMoveDir = elevUp;
+      }
+      else if ((currentFloor == 4))
+      {
+        elevatorMoveDir = elevDown;
+      }
+
+      if (stepperVars::doorCur == doorClosed) //if doors are closed, open them
       {
         delay(2000);
-        moveDoor(down); // open doors
+        moveDoor(down); //open doors
         delay(1000);
       }
       else
       {
        if (gotoFloor > currentFloor)
         {
+          lcdDisplay(0,"Moving to: ",gotoFloor);
           elevator = prepare_up;
           elevatorMoveDir = elevUp;
         }
         else if (gotoFloor < currentFloor)
         {
+          lcdDisplay(0,"Moving to: ",gotoFloor);
           elevator = prepare_down;
           elevatorMoveDir = elevDown;
         }
@@ -173,7 +191,7 @@ void loop() {
       else
       {
         delay(1000);
-        moveDoor(up); // close doors
+        moveDoor(up); //close doors
         delay(2000);
       }
       break;
@@ -188,21 +206,21 @@ void loop() {
       else
       {
         delay(1000);
-        moveDoor(up); // close doors
+        moveDoor(up); //close doors
         delay(2000);
       }
-      
       break;
     }
     case moving_algorithm:
     {
-      //none right now, just go to floor
+
       Serial.print("gotoFloor: ");
       Serial.print(gotoFloor);
       int elevatormove123 = moveElevator(elevatorMoveDir,gotoFloor); //what does dir even do here....
       if (elevatormove123 > 0)
       {
         currentFloor = elevatormove123;
+        lcdDisplay(0,"Floor: ",currentFloor);
         Serial.print("move completed, current floor: ");
         Serial.print(currentFloor);
         Serial.print(" current height: ");
@@ -210,6 +228,7 @@ void loop() {
       }
       else
       {
+        lcdDisplay(1,"Move error");
         Serial.print("move error");
       }
     

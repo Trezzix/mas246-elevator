@@ -17,13 +17,17 @@ void moveDoor(motorState dir) //dir: up = open, down = close //should be moved t
   {
     case up:
     {
+      lcdDisplay(1,"Closing door");
       currentStep = writeStepper(dir,200,currentStep,5000);
       doorCur = doorClosed;
+      lcdDisplay(1,"Door closed");
       break;
     }
     case down:
     {
+      lcdDisplay(1,"Opening door");
       currentStep = writeStepper(dir,200,currentStep,5000);
+      lcdDisplay(1,"Door open");
       doorCur = doorOpen;
       break;
     }
