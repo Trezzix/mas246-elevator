@@ -36,7 +36,7 @@ int moveElevator(enumElevatorDir dir) //tell servo what to do, dir useless? //ch
 
   unsigned long finTime;
   bool endingMove = false;
-  float accDir = 1;
+  float accKiDir = 1;
   
   if (true)//check if doors are closed with sensor
   {
@@ -45,12 +45,12 @@ int moveElevator(enumElevatorDir dir) //tell servo what to do, dir useless? //ch
       //do stuffs depending on direction
       case elevUp:
       {
-        accDir = 1;
+        accKiDir = 1;
         break;
       }
       case elevDown:
       {
-        accDir = -1;
+        accKiDir = -1;
         break;
       }
     }
@@ -73,7 +73,7 @@ int moveElevator(enumElevatorDir dir) //tell servo what to do, dir useless? //ch
         {
           case servoAcc:
            {
-             u = ((elevatorAcc * tx) / elevatorSpeed) * accDir;  //function for acceleration then converted to 0-1
+             u = ((elevatorAcc * tx) / elevatorSpeed) * accKiDir;  //function for acceleration then converted to 0-1
              //Serial.println(u);
              if (abs(u) >= elevatorSpeed) {
                 Serial.println("starting PID");
@@ -98,7 +98,7 @@ int moveElevator(enumElevatorDir dir) //tell servo what to do, dir useless? //ch
                 errorDot = 0;
               }
             }
-            u = (kp * error) + (ki * errorInt) + (kd * errorDot);
+            u = (kp * error) + (ki * errorInt * 1) + (kd * errorDot);//accKiDir//
             break;
            }
         }

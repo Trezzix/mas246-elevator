@@ -84,6 +84,10 @@ namespace sensorVars
 namespace HMIvars
 {
     int buttonPress = 0;
+    int led0 = 49;
+    int led1 = 48;
+    int led2 = 47;
+    int led3 = 46;
     //int ledNumber;
     //bool ledState;
     int LCD_Backlight = 4;
@@ -97,9 +101,9 @@ namespace PIDvars //all float since used for calculation
   float errorInt = 0;
   float errorPrev = 0;
 
-  float kp = 4;
-  float ki = 0;
-  float kd = 1; //need to fix pid, ki breaks it..
+  float kp = 2.9;
+  float ki = -0.00;
+  float kd = 0.25; //need to fix pid, ki breaks it..
 
   float u = 0;
 }
@@ -130,8 +134,8 @@ void setup() {
     elevatorRequestsAlt[i] = -1;
   }
   // put your setup code here, to run once:
-  Serial.begin(9600);
-  lcdInit();
+  Serial.begin(19200);
+  hmiInit();
   stepperInit();  
   servoInit();
   servoEncoderInit();
@@ -181,7 +185,7 @@ void loop() {
         }
         else if (gotoFloor < currentFloor)
         {
-          lcdDisplay(0,"Moving dw to: ",gotoFloor);
+          lcdDisplay(0,"Moving dwn to: ",gotoFloor);
           elevator = prepare_down;
           elevatorMoveDir = elevDown;
         }
@@ -284,7 +288,7 @@ void posPlot(float currentHeight,float error,float u)
 }
 void posPlot(float motorSpeedPerc, float speedDot)
 {
-  Serial.print("motorSpeedPerc");
+  Serial.print("motorSpeedPerc:");
   Serial.print(motorSpeedPerc);
   Serial.print(",");
   Serial.print("speedDot:");

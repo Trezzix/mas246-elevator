@@ -19,6 +19,7 @@ int checkButton()
           int a = queueSystem(buttonPressed2);
           //write input:
           printElevList();
+          ledWrite();
           return a;
       }
     }
@@ -150,7 +151,7 @@ int queueSystem(buttonPressType desiredFloor)
                   || (((static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist) < ((PIDvars::error) + 1.0))) 
                   && (currentHeight > (static_cast<float>(desiredFloor.floorNum) * servoVars::floorDist) - servoVars::floorDist) )
         {
-          lcdDisplay(0,"Moving dw to: ",desiredFloor.floorNum);
+          lcdDisplay(0,"Moving dwn to: ",desiredFloor.floorNum);
           Serial.println("writing to main 4 (in move change)");
           createQueue(true,true,desiredFloor);
           return 1;
@@ -285,7 +286,7 @@ void clearRequest()
     }
     elevatorRequestsCurrent[9] = -1;
     printElevList();
-
+    ledWrite();
   }
   else if((elevatorRequestsCurrent[0] == -1) && (elevatorRequestsAlt[0] != -1)) //all floors in dir reached, switching to alt if not empty
   {
@@ -295,6 +296,7 @@ void clearRequest()
       elevatorRequestsCurrent[i] = elevatorRequestsAlt[i];
       elevatorRequestsAlt[i] = -1;
     }
+    ledWrite();
   }
 }
 
@@ -319,11 +321,33 @@ void printElevList()
 
 void ledWrite()
 {
-  
+  uint8_t ledOn = 0;
+  for(int i = 0; i < 10; i++)
+  {
+    if (elevatorRequestsCurrent[i] != -1)
+    {
+      ledOn |= (1<<(elevatorRequestsCurrent[i]-1));
+    }
+    if (elevatorRequestsAlt[i] != -1)
+    {
+      ledOn |= (1<<(elevatorRequestsAlt[i]-1));
+    }
+  }
+  digitalWrite(led0,(ledOn & 1) == 1);
+  digitalWrite(led1,((ledOn & (1<<1))>>1 ) == 1);
+  digitalWrite(led2,((ledOn & (1<<2))>>2 ) == 1);
+  digitalWrite(led3,((ledOn & (1<<3))>>3 ) == 1);
 }
 
-void lcdInit()
+void hmiInit()
 {
+  //LEDs:
+  pinMode(led0, OUTPUT);
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+
+  //lcd:
   pinMode(LCD_Backlight, OUTPUT);
   analogWrite(LCD_Backlight,128);
   lcd.begin(16,2);//set size of lcd
