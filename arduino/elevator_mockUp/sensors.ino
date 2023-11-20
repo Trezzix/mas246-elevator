@@ -1,8 +1,8 @@
 using namespace sensorVars;
 
-void servoEncoderInit()
+void servoEncoderInit() //initialize encoder
 {
-  pinMode(encoderPinA, INPUT_PULLUP);
+  pinMode(encoderPinA, INPUT_PULLUP); //set as input and enable pullup for sinking
   pinMode(encoderPinB, INPUT_PULLUP);
 
   //attach ISR
@@ -15,7 +15,7 @@ void servoEncoderInit()
 
 long readServoPosition()
 {
-  noInterrupts();
+  noInterrupts(); //disable interrupts while checking value
   long a = encoderPos;
   interrupts();
   return a;
@@ -23,13 +23,13 @@ long readServoPosition()
 
 void readStepperPos()
 {
-    //remove from UML also, dosent exist...? only dependant on number of stepps ran
+    //no sensor for the stepper
 }
 
-void doSignalA()
+void doSignalA() //interrupt function
 {
   //read input
-  if (digitalRead(encoderPinB) == A_set)
+  if (digitalRead(encoderPinB) == A_set) //if A and B are both on, then it is cw
   {
     encoderPos--; //cw, has 131:1 gear ratio also
   }
@@ -41,7 +41,7 @@ void doSignalA()
 }
 
 /*
-void doSignalB()
+void doSignalB() //untested, not needed
 {
   //read input
   if (digitalRead(encoderPinA) == B_set)

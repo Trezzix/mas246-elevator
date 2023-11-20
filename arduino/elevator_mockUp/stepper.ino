@@ -1,25 +1,25 @@
 using namespace stepperVars;
 
-void stepperInit() //does nothing?
+void stepperInit() //initialize stepper
 {
   pinMode(_A, OUTPUT);
   pinMode(_B, OUTPUT);
   pinMode(_A_phase, OUTPUT);
   pinMode(_B_phase, OUTPUT);
-  dac_init();
+  dac_init(); //enable dac for stepper motor
   set_dac(4095,4095);//IA per motor phase
 }
 
-void moveDoor(motorState dir) //dir: up = open, down = close //should be moved to stepper?
+void moveDoor(motorState dir) //dir: up = open, down = close, winding/unwinding would make more sense here
 {
-  doorCur = doorHalf; // dosent really do anything...
-  switch (dir)
+  doorCur = doorHalf; //set as half open/closed while moving
+  switch (dir)//open/close door depending on input
   {
     case up:
     {
       lcdDisplay(1,"Closing door");
       currentStep = writeStepper(dir,200,currentStep,5000);
-      doorCur = doorClosed;
+      doorCur = doorClosed; //should be a check and not just set after the function is ran
       lcdDisplay(1,"Door closed");
       break;
     }
@@ -44,15 +44,15 @@ uint8_t writeStepper(const motorState dir,int stepps,const int curStepp,const in
 
   if (curStepp > 3 || steppDelay_us < 2500)
   {
-    stepps = 0; //error, ends func
+    stepps = 0; //error, ends function, should return error as door will not be closed
     return curStepp;
   }
 
   while(stepps > 0)
   {
-    steppNum = base & 0b00000011;
+    steppNum = base & 0b00000011; //makes steppNum loop from 0-3
 
-    switch (steppNum)
+    switch (steppNum) //run induvidual stepp:
     {
       case 0:
       {
@@ -88,7 +88,7 @@ uint8_t writeStepper(const motorState dir,int stepps,const int curStepp,const in
       }
     }
 
-    switch(dir) 
+    switch(dir) //increase or decrease base depending on direction, could be optimized
     {
       case up:
       {
@@ -101,8 +101,8 @@ uint8_t writeStepper(const motorState dir,int stepps,const int curStepp,const in
         break;
       }
     }
-    stepps--;
-    delayMicroseconds(steppDelay_us);
+    stepps--; //count number of stepps ran
+    delayMicroseconds(steppDelay_us); //run delay between each stepp
   }
-  return steppNum; //steppNum = ny curStepp
+  return steppNum; //steppNum = ny curStepp, return so stepper knows current position for next movement
 }

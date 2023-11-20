@@ -2,9 +2,9 @@
 #include <dac.h>
 
 
-//define pins
+//enumerators
 
-enum enumElevatorDir
+enum enumElevatorDir //direction for the buttons to compare to the elevator direction
 {
   elevUp,
   elevDown,
@@ -19,14 +19,14 @@ enum doorState
     doorHalf
   };
 
-enum motorState
+enum motorState //winding,unwinding,idle
   {
     up,
     down,
     idleMotor
   };
   
-enum elevatorState
+enum elevatorState //states for the elevator
   {
     first_Floor,
     idle,
@@ -42,6 +42,8 @@ struct buttonPressType
   enumElevatorDir bRequestDir;
   int8_t floorNum;
 };
+
+//namespaces, supposed to be in induvidual .ino files but it wouldnt compile that way
 
 namespace stepperVars
 {  
@@ -101,7 +103,7 @@ namespace PIDvars //all float since used for calculation
   float errorInt = 0;
   float errorPrev = 0;
 
-  float kp = 2.9;
+  float kp = 3;
   float ki = -0.00;
   float kd = 0.25; //need to fix pid, ki breaks it..
 
@@ -128,12 +130,12 @@ void servoEncoderInit();
 float writeServo(float motorSpeedPerc, int motorPrev, unsigned long dt);
    
 void setup() {
-  for(int i = 0; i < 10; i++)
+  for(int i = 0; i < 10; i++) //set all requests to -1 (-1 = no request)
   {
     elevatorRequestsCurrent[i] = -1;
     elevatorRequestsAlt[i] = -1;
   }
-  // put your setup code here, to run once:
+  //run all init functions:
   Serial.begin(19200);
   hmiInit();
   stepperInit();  
@@ -146,9 +148,9 @@ void setup() {
 }
 
 void loop() {
-  switch (elevator) //states
+  switch (elevator) //elevator states
   {
-    case first_Floor:
+    case first_Floor: //initialize elevator
     {
      currentFloor = 1;
      gotoFloor = currentFloor;
@@ -158,13 +160,13 @@ void loop() {
      elevator = idle;
     break;
     }
-    case idle:
+    case idle: //elevator functions begin:
     {
-      if (currentFloor == 1)
+      if (currentFloor == 1) //set dir on lowest floor
       {
         elevatorMoveDir = elevUp;
       }
-      else if ((currentFloor == 4))
+      else if ((currentFloor == 4)) //set dir on highest floor (4)
       {
         elevatorMoveDir = elevDown;
       }
@@ -173,17 +175,18 @@ void loop() {
       {
         delay(2000);
         moveDoor(down); //open doors
+        ledWrite();
         delay(1000);
       }
       else
       {
-       if (gotoFloor > currentFloor)
+       if (gotoFloor > currentFloor) //move up
         {
           lcdDisplay(0,"Moving up to: ",gotoFloor);
           elevator = prepare_up;
           elevatorMoveDir = elevUp;
         }
-        else if (gotoFloor < currentFloor)
+        else if (gotoFloor < currentFloor) //move down
         {
           lcdDisplay(0,"Moving dwn to: ",gotoFloor);
           elevator = prepare_down;
@@ -196,10 +199,10 @@ void loop() {
       }
       break;
     }
-    case prepare_up: // set a direction as up or down
+    case prepare_up: //begin moving up
     {
       Serial.println("moving up");
-      if (stepperVars::doorCur == doorClosed)
+      if (stepperVars::doorCur == doorClosed) //only move if doors are closed
       {
         elevator = moving_algorithm;
       }
@@ -214,7 +217,7 @@ void loop() {
     case prepare_down:
     {
       Serial.println("moving down");
-      if (stepperVars::doorCur == doorClosed)
+      if (stepperVars::doorCur == doorClosed) //only move if doors are closed
       {
         elevator = moving_algorithm;
       }
@@ -226,77 +229,77 @@ void loop() {
       }
       break;
     }
-    case moving_algorithm:
+    case moving_algorithm: //moving algorithm goes up and down 
     {
       Serial.print("gotoFloor: ");
       Serial.print(gotoFloor);
-      int elevatormove123 = moveElevator(elevatorMoveDir); //what does dir even do here....
+      int elevatormove123 = moveElevator(elevatorMoveDir); //move the elevator, returns 1 if success
       if (elevatormove123 > 0)
       {
         currentFloor = elevatormove123;
-        lcdDisplay(0,"Floor: ",currentFloor);
+        lcdDisplay(0,"Floor: ",currentFloor); //print info
         Serial.print("move completed, current floor: ");
         Serial.print(currentFloor);
         Serial.print(" current height: ");
         Serial.println(currentHeight);
       }
-      else
+      else //rarely used
       {
         lcdDisplay(1,"Move error");
         Serial.print("move error");
       }
     
-       float temp = static_cast<float>( readServoPosition() ) / sensorVars::cps;
-       elevator = idle;
+       float temp = static_cast<float>( readServoPosition() ) / sensorVars::cps;//not used
+       elevator = idle; //open doors and wait for new floor requests
        break;
     }
   }
 
-  clearRequest();
-  checkButton();
+  clearRequest(); //check if current floor = current request
+  checkButton(); //check button each loop
   if (elevatorRequestsCurrent[0] != -1)
   {
-    gotoFloor = elevatorRequestsCurrent[0];
+    gotoFloor = elevatorRequestsCurrent[0]; //set gotofloor if there is a request
   }
   else
   {
-    gotoFloor = currentFloor;
+    gotoFloor = currentFloor; //else dont move
   }
 }
 
+//graphing for plotting:
 void posPlot(float currentHeight,float error,float u)
 {
-  Serial.print("currentHeight:");
-  Serial.print(currentHeight);
+  Serial.print(millis());
   Serial.print(",");
 
-  //Serial.print("currentHeight:");
-  //Serial.print(currentHeight);
-  //Serial.print(",");
+ // Serial.print("currentHeight:");
+  Serial.print(currentHeight);
+  Serial.print(",");
 
   //Serial.print("height_moved:");
   //Serial.print(sensorVars::heightMoved);
   //Serial.print(",");
 
-  Serial.print("error:");
+  //Serial.print("error:");
   Serial.print(error);
   Serial.print(",");
 
-  Serial.print("motor_input:");
+  //Serial.print("motor_input:");
   Serial.print(u);
   Serial.print(",");
 }
 void posPlot(float motorSpeedPerc, float speedDot)
 {
-  Serial.print("motorSpeedPerc:");
+ // Serial.print("motorSpeedPerc:");
   Serial.print(motorSpeedPerc);
   Serial.print(",");
-  Serial.print("speedDot:");
+  //Serial.print("speedDot:");
   Serial.print(speedDot); //m/s^2
   Serial.print(",");
 }
 void posPlot(float output)
 {
-  Serial.print("current_speed:");
+  //Serial.print("current_speed:");
   Serial.println(output);
 }
