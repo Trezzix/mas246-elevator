@@ -47,7 +47,7 @@ struct buttonPressType
 
 namespace stepperVars
 {  
-  int currentStep = 0;
+  uint8_t currentStep = 0;
   int _A = 69; //should be replaced wth #define?
   int _A_phase = 68;
   int _B = 67;
@@ -103,9 +103,9 @@ namespace PIDvars //all float since used for calculation
   float errorInt = 0;
   float errorPrev = 0;
 
-  float kp = 3;
+  float kp = 1;
   float ki = -0.00;
-  float kd = 0.25; //need to fix pid, ki breaks it..
+  float kd = 0.0; //need to fix pid, ki breaks it..
 
   float u = 0;
 }

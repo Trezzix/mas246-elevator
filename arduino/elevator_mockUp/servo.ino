@@ -60,7 +60,7 @@ int moveElevator(enumElevatorDir dir) //move elevator
         floorReq = (elevatorRequestsCurrent[0]);
         sensorVars::heightMoved =((static_cast<float>( readServoPosition() ) / sensorVars::cps) * meterPerRot); //10 rotations for 5m moved  
         currentHeight = sensorVars::heightMoved;//add initial floor, should be a variable
-        tx = (static_cast<float>(millis() - timeAccStart))/1000.0; //ms
+        tx = (static_cast<float>(millis() - timeAccStart))/1000.0; //s
         dt = (tx - tx_prev);//converted to s, float because used in calcs
       
         error = (static_cast<float>(floorReq) * floorDist) - currentHeight - floorDist; //converted to m 
@@ -71,9 +71,9 @@ int moveElevator(enumElevatorDir dir) //move elevator
         {
           case servoAcc:
            {
-             u = ((elevatorAcc * tx) / elevatorSpeed) * accKiDir;  //function for acceleration then converted to 0-1
+             u = ((elevatorAcc * tx) / elevatorSpeed) * accKiDir;  //function for acceleration then converted to 0-1 by dividing by max speed
              //Serial.println(u);
-             if (abs(u) >= elevatorSpeed) {//start pid after accelerated to max speed
+             if (abs(u) >= 1.0) {//start pid after accelerated to max speed (100%)
                 Serial.println("starting PID");
                servoTypeState = servoMoveType::servoPID;
              }
@@ -96,7 +96,7 @@ int moveElevator(enumElevatorDir dir) //move elevator
                 errorDot = 0;
               }
             }
-            u = (kp * error) + (ki * errorInt) + (kd * errorDot);//PID calculation
+            u = (kp * error) + (ki * errorInt) + (kd * errorDot) + (0.035 * accKiDir);//PID calculation
             break;
            }
         }

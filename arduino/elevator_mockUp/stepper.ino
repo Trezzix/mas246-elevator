@@ -34,13 +34,13 @@ void moveDoor(motorState dir) //dir: up = open, down = close, winding/unwinding 
   }  
 }
 
-uint8_t writeStepper(const motorState dir,int stepps,const int curStepp,const int steppDelay_us)
+uint8_t writeStepper(const motorState dir,int stepps,const uint8_t curStepp,const int steppDelay_us)
 {
   //initial:
   //steppDelayus should be minimum(?) 2500
   //uint8_t compare = 0x3;
-  uint8_t base = 0x10; // less overflowing, defined if it does though
-  uint8_t steppNum = curStepp;
+  uint8_t base = curStepp;
+  uint8_t steppNum = 0;
 
   if (curStepp > 3 || steppDelay_us < 2500)
   {
