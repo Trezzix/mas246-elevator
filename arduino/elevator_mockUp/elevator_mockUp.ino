@@ -70,6 +70,7 @@ namespace servoVars
   const float maxRPS = (11500.0/131.0)/60.0; //rps of weight at 255 PWM, 
   float speedDot = 0;
   int floorReq;
+  float deadzone = 0.041;
 }
 
 namespace sensorVars
@@ -103,9 +104,9 @@ namespace PIDvars //all float since used for calculation
   float errorInt = 0;
   float errorPrev = 0;
 
-  float kp = 1;
-  float ki = -0.00;
-  float kd = 0.0; //need to fix pid, ki breaks it..
+  float kp = 2.0;
+  float ki = 0.0;
+  float kd = 0.5; //need to fix pid, ki breaks it..
 
   float u = 0;
 }
@@ -273,7 +274,7 @@ void posPlot(float currentHeight,float error,float u)
   Serial.print(millis());
   Serial.print(",");
 
- // Serial.print("currentHeight:");
+  //Serial.print("currentHeight:");
   Serial.print(currentHeight);
   Serial.print(",");
 
@@ -282,7 +283,7 @@ void posPlot(float currentHeight,float error,float u)
   //Serial.print(",");
 
   //Serial.print("error:");
-  Serial.print(error);
+  Serial.print(error,5);
   Serial.print(",");
 
   //Serial.print("motor_input:");
@@ -291,7 +292,7 @@ void posPlot(float currentHeight,float error,float u)
 }
 void posPlot(float motorSpeedPerc, float speedDot)
 {
- // Serial.print("motorSpeedPerc:");
+  //Serial.print("motorSpeedPerc:");
   Serial.print(motorSpeedPerc);
   Serial.print(",");
   //Serial.print("speedDot:");

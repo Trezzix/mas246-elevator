@@ -11,19 +11,21 @@ const byte encoderPinB = 21;
 volatile long encoderPos = 0;
 const float cps(32.0 * 131.0); //float since only used for maths, cps * gear ratio of 131:1
 
-const float meterPerRot = 1; //m/rotation
+const float meterPerRot = 1.0; //m/rotation
 const float maxRPS = (11500.0/131.0)/60.0; //rps of weight at 255 PWM, 
 
 unsigned long timeAccStart;
 float heightMoved = 0.0;
-float speed = 0;
+float speed2 = 0.0;
 float heightMovedPrev = 0;
-float tx = 0;
-float tx_prev = 0;
 float dt = 0;
 bool a = true;
 bool endingMove = false;
 unsigned long finTime;
+float averaged =0.0;
+float movingaverage;
+float heightMovedavg;
+int i = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -36,24 +38,40 @@ void setup() {
   digitalWrite(decay,LOW); // sets to slow in decay mode, could be switched to bipolar for simpler PID use
   timeAccStart = millis();
   heightMovedPrev = 0;
-
-
-  Serial.print(millis());
-  Serial.print(",");
-  Serial.println(speed,16);
   analogWrite(enable,pwmMax);
 }
 
 void loop() {
   if(a)
   {
-  tx = (static_cast<float>(millis() - timeAccStart))/1000.0; //s
-  dt = tx - tx_prev;
-  heightMoved =((static_cast<float>( readServoPosition() ) / cps) * meterPerRot);
-  speed = (heightMoved-heightMovedPrev)/dt;
-  Serial.print(millis());
-  Serial.print(",");
-  Serial.println(speed,16);
+
+  if ((millis() % 10) == 0)
+  {
+    heightMoved =((static_cast<float>( readServoPosition() ) / cps) * meterPerRot);
+    dt = 10.0/1000.0;//s
+    delayMicroseconds(10);
+    speed2 = (heightMoved-heightMovedPrev)/dt;
+    heightMovedPrev = heightMoved;
+    movingaverage += speed2;
+    if(i == 5)
+    {
+      averaged = movingaverage / 5.0;
+      Serial.print(millis());
+      Serial.print(",");
+      Serial.print(heightMoved,8);
+      Serial.print(",");
+      Serial.print(movingaverage,8);
+      Serial.print(",");
+      Serial.print(speed2,32);
+      Serial.print(",");
+      Serial.println(averaged,8); //speed2 averaged
+      
+      i=0;
+      movingaverage = 0.0;
+    }
+    i++;
+  }
+  
   if (endingMove == false)
         {
           finTime = millis();
@@ -63,11 +81,23 @@ void loop() {
         {
           a = false;
           analogWrite(enable,0);
-        }s
+        }
 
   }
-  heightMovedPrev = heightMoved;
-  tx_prev = tx;
+  /*
+    for(int i = 0; i < (k-1); i++)
+    {
+      movingaverage[i] = movingaverage[i+1];
+    }
+    movingaverage[k] = heightMoved;
+    averaged = 0.0;
+    for(int i = 0; i < k; i++)
+    {
+      averaged += static_cast<float>(movingaverage[i]);
+    }
+    
+    heightMovedavg = averaged/static_cast<float>(k);
+    */
 }
 
 void servoEncoderInit() //initialize encoder

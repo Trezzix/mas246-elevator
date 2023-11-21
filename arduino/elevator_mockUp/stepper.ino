@@ -50,6 +50,20 @@ uint8_t writeStepper(const motorState dir,int stepps,const uint8_t curStepp,cons
 
   while(stepps > 0)
   {
+    switch(dir) //increase or decrease base depending on direction, could be optimized
+    {
+      case up:
+      {
+        base++;
+        break;
+      }
+      case down:
+      {
+        base--;
+        break;
+      }
+    }
+
     steppNum = base & 0b00000011; //makes steppNum loop from 0-3
 
     switch (steppNum) //run induvidual stepp:
@@ -88,19 +102,6 @@ uint8_t writeStepper(const motorState dir,int stepps,const uint8_t curStepp,cons
       }
     }
 
-    switch(dir) //increase or decrease base depending on direction, could be optimized
-    {
-      case up:
-      {
-        base++;
-        break;
-      }
-      case down:
-      {
-        base--;
-        break;
-      }
-    }
     stepps--; //count number of stepps ran
     delayMicroseconds(steppDelay_us); //run delay between each stepp
   }

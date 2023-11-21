@@ -35,7 +35,7 @@ int moveElevator(enumElevatorDir dir) //move elevator
 
   unsigned long finTime;
   bool endingMove = false;
-  float accKiDir = 1;
+  float accKiDir = 1.0;
   
   if (true)//check if doors are closed with sensor, no sensor on stepper..
   {
@@ -43,12 +43,12 @@ int moveElevator(enumElevatorDir dir) //move elevator
     {
       case elevUp://change acceleration direction
       {
-        accKiDir = 1;
+        accKiDir = 1.0;
         break;
       }
       case elevDown:
       {
-        accKiDir = -1;
+        accKiDir = -1.0;
         break;
       }
     }
@@ -96,7 +96,7 @@ int moveElevator(enumElevatorDir dir) //move elevator
                 errorDot = 0;
               }
             }
-            u = (kp * error) + (ki * errorInt) + (kd * errorDot) + (0.035 * accKiDir);//PID calculation
+            u = (kp * error) + (ki * errorInt) + (kd * errorDot) + (deadzone * accKiDir);//PID calculation with deadzone
             break;
            }
         }
