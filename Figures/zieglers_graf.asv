@@ -1,0 +1,51 @@
+clc;close all; clear;
+
+%% Plotting
+data = readtable("zieglers_output.csv",'NumHeaderLines',0);
+datarows = 1:(height(data)-1);
+t = table2array(data(datarows,"time"));
+v = table2array(data(datarows,"speed"));
+sample_rate = 500; %500[Hz] = 1/0.002[s] <--2ms
+filtering_freq = 0.000000000001;
+v_filter = lowpass(v,filtering_freq,sample_rate); %v=v
+
+figure
+hold on
+xlim([1800 2600])
+ylim([-0.1 1.1])
+title('Ziegler Nichols Open Loop Tuning')
+xlabel('Time [ms]')
+
+% Step response graphing
+yyaxis left
+ylabel('Velocity output [m/s]')
+plot(t,v_filter, LineWidth=1.5)
+
+% Step input graphing
+yyaxis right
+ylabel('PWM input [bits]')
+ylim([-25 200])
+stepTime = 2000; % [ms]
+U = 174;  % [%]
+% Horizontal line before step input
+plot([0, stepTime], [0, 0], '--r');
+
+% Vertical rise
+plot([stepTime, stepTime], [0, U], '--r');
+
+% Horizontal line after step input
+plot([stepTime, max(t)], [U, U], '--r');
+
+%% Calculations
+
+dy = 0.380097 - 0.119937;
+dx = 2034 - 2011;
+
+R = dy/dx;          % Reaction Rate
+L = 2006 - 2000;    % Dead Time
+
+Kp = 1.2/(L*R/U);
+Ki = 0.6/(L^2*R/U);
+Kd = 0.6/(R/U);
+
+table(Kp, Ki, Kd)
