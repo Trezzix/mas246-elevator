@@ -8,7 +8,7 @@ enum enumElevatorDir //direction for the buttons to compare to the elevator dire
 {
   elevUp,
   elevDown,
-  elevNeither,
+  elevNeither, //unused?
   reqInternal //internal request is independent of direction
 };
 
@@ -70,7 +70,7 @@ namespace servoVars
   const float maxRPS = (11500.0/131.0)/60.0; //rps of weight at 255 PWM, 
   float speedDot = 0;
   int floorReq;
-  float deadzone = 0.041;
+  float deadzone = 0.043;
 }
 
 namespace sensorVars
@@ -104,9 +104,9 @@ namespace PIDvars //all float since used for calculation
   float errorInt = 0;
   float errorPrev = 0;
 
-  float kp = 2.0;
+  float kp = 1.25;
   float ki = 0.0;
-  float kd = 0.5; //need to fix pid, ki breaks it..
+  float kd = 0.1; //need to fix pid, ki breaks it..
 
   float u = 0;
 }
@@ -272,6 +272,10 @@ void loop() {
 void posPlot(float currentHeight,float error,float u)
 {
   Serial.print(millis());
+  Serial.print(",");
+
+  //Serial.print("currentRequest:");
+  Serial.print((elevatorRequestsCurrent[0]*servoVars::floorDist) - servoVars::floorDist);
   Serial.print(",");
 
   //Serial.print("currentHeight:");

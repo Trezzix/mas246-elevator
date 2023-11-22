@@ -112,14 +112,14 @@ int moveElevator(enumElevatorDir dir) //move elevator
         //check if on floor for 2 seconds
         if ((error <= 0.025) && (error >= -0.025) && (endingMove == false)) //if the elevator is within 0.025m of the floor
         {
-          finTime = millis();
+          finTime = millis();//start finTime
           endingMove = true;
         }
-        if(((millis() - finTime) >= 2000) && (endingMove))
+        if(((millis() - finTime) >= 2000) && (endingMove))//check if 2 seconds has passed
         {
           if ((error <= 0.015) && (error >= -0.015))
           {
-            servoTypeState = moveComplete; //exit loop when its been within 0.025m of the floor for 2 seconds
+            servoTypeState = moveComplete; //exit loop if elevator is within 0.015m of the floor after 2 secodnds of starting finTime
           }
           else
           {
@@ -153,7 +153,7 @@ float writeServo(float motorSpeedPerc, float motorPrev, float dt) //input: -1 to
   }
 
   servoDir = (motorSpeedPerc >= 0); //true if positive, false if negative
-  digitalWrite(phase,!servoDir);
+  digitalWrite(phase,!servoDir); //false = ccw (up), true = cw (down)
   
   motorSpeedPWM = static_cast<int>(abs(motorSpeedPerc) * motorSpeedMax);//convert 0-1 to PWM based on calculated max pwm
   

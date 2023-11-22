@@ -1,0 +1,132 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>tes.ino
+--
+eeh()
+</help_text><element><id>UMLClass</id><coordinates><x>550</x><y>0</y><w>220</w><h>300</h></coordinates><panel_attributes>elevator.ino
+--
+motorState : enum
+enumElevatorDir: enum
+elevatorState : enum
+
++ elevator : elevatorState 
++ elevatorMoveDir : enumElevatorDir 
++ currentFloor : int
++ currentHeight : float 
++ gotoFloor : int 
++ timeBegin : unsigned long
++ elevatorRequestsCurrent[10] : int8_t 
++ elevatorRequestsAlt[10] : int8_t 
+--
+setup() : void
+loop() : void
+posPlot() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>200</x><y>430</y><w>250</w><h>250</h></coordinates><panel_attributes>HMI.ino
+--
+int buttonPress = 0;
+LCD_Backlight : int
+lcd : LiquidCrystal 
+buttonPressType : struct buttonPressType
+--
+hmiInit() : void
+checkButton() : int
+lcdDisplay() : void
+buttonRead() : buttonPressType
+queueSystem() : int(0,1)
+createQueue() : void
+clearRequest() : void
+printElevList() : void
+ledWrite() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>760</x><y>20</y><w>120</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>100;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>820</x><y>370</y><w>80</w><h>30</h></coordinates><panel_attributes>actuators</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>430</y><w>220</w><h>430</h></coordinates><panel_attributes>servo.ino
+--
+servoMoveType : enum
+
+motorSpeedMax  : int
+int enable  : int
+int phase  : int
+int decay : int
+float elevatorAcc : float
+float elevatorSpeed : float
+float floorDist : float
+float meterPerRot : float
+float maxRPS : float 
+speedDot : float
+floorReq : int
+deadzone : float
+
+error : float
+errorDot : float
+errorInt : float
+errorPrev : float
+kp : float
+ki : float
+kd : float
+u : float
+--
+servoInit() : void
+writeServo() : float
+moveElevator() : int</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1090</x><y>440</y><w>240</w><h>200</h></coordinates><panel_attributes>stepper.ino
+--
+doorState : enum
+currentStep : uint8_t 
+_A : int
+_A_phase : int
+_B : int
+_B_phase : int
+_stepsPerRev : int
+doorCur : doorState 
+--
+stepperInit() : void
+writeStepper() : uint8_t
+moveDoor() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>150</x><y>380</y><w>70</w><h>150</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;130;50;130</additional_attributes></element><element><id>UMLClass</id><coordinates><x>470</x><y>430</y><w>170</w><h>190</h></coordinates><panel_attributes>sensors.ino
+--
+encoderPinA : byte
+encoderPinB : byte
+float cps : float 
+encoderPos : long
+ A_set : boolean
+_set : boolean
+heightMoved : float
+--
+servoEncoderInit() : void
+readServoPosition() : long
+doSignalA() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>580</x><y>710</y><w>60</w><h>30</h></coordinates><panel_attributes>SENSE
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>420</x><y>740</y><w>60</w><h>30</h></coordinates><panel_attributes>THINK
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLNote</id><coordinates><x>1060</x><y>750</y><w>50</w><h>30</h></coordinates><panel_attributes>ACT
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>540</x><y>610</y><w>60</w><h>140</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;10;10;120;40;120</additional_attributes></element><element><id>Relation</id><coordinates><x>350</x><y>670</y><w>90</w><h>100</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;10;10;80;70;80</additional_attributes></element><element><id>Relation</id><coordinates><x>890</x><y>760</y><w>190</w><h>30</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;10;170;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1100</x><y>630</y><w>100</w><h>160</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>80;10;80;140;10;140</additional_attributes></element><element><id>Relation</id><coordinates><x>1270</x><y>330</y><w>30</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;110</additional_attributes></element><element><id>Relation</id><coordinates><x>890</x><y>450</y><w>120</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>100;70;100;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>450</x><y>40</y><w>120</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;100;10</additional_attributes></element><element><id>Relation</id><coordinates><x>630</x><y>520</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>760</x><y>60</y><w>120</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>100;70;60;70;60;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>860</x><y>110</y><w>150</w><h>160</h></coordinates><panel_attributes>&lt;&lt;Enumeration&gt;&gt;
+elevatorState
+--
+first_Floor
+idle
+prepare_up
+prepare_down
+moving_algorithm
+moving_up
+moving_down
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>360</x><y>290</y><w>320</w><h>160</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;140;10;40;300;40;300;10</additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>320</y><w>230</w><h>70</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>210;50;210;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>890</x><y>380</y><w>350</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;330;10;330;60</additional_attributes></element><element><id>Relation</id><coordinates><x>760</x><y>380</y><w>80</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>60;10;10;10;10;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>860</x><y>0</y><w>110</w><h>90</h></coordinates><panel_attributes>&lt;&lt;Enumeration&gt;&gt;
+motorState
+--
+UP
+DOWN or 
+IDLE
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>350</x><y>10</y><w>110</w><h>110</h></coordinates><panel_attributes>&lt;&lt;Enumeration&gt;&gt;
+enumElevatorDir
+--
+elevUp
+elevDown
+elevNeither
+reqInternal 
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>920</x><y>520</y><w>150</w><h>90</h></coordinates><panel_attributes>&lt;&lt;Enumeration&gt;&gt;
+servoMoveType 
+--
+servoAcc,
+servoPID
+moveComplete
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1160</x><y>250</y><w>150</w><h>90</h></coordinates><panel_attributes>&lt;&lt;Enumeration&gt;&gt;
+doorState
+--
+doorOpen
+doorClosed
+doorHalf
+bg=white</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>140</x><y>300</y><w>200</w><h>90</h></coordinates><panel_attributes>&lt;&lt;Struct &gt;&gt;
+servoMoveType 
+--
++ bRequestDir : enumElevatorDir
++ floorNum : int8_t
+bg=white</panel_attributes><additional_attributes></additional_attributes></element></diagram>
