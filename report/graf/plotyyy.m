@@ -43,6 +43,8 @@ figure('units','normalized',...
 
 %Plot the first two lines with plotyy
 [ax,hlines(1),hlines(2)] = plotyy(x1,y1,x2,y2);
+% Make the first plot line (y1) thicker
+set(hlines(1), 'LineWidth', 1.5);
 xlabel('time (ms)')
 cfig = get(gcf,'color');
 pos = [0.1  0.1  0.7  0.8];
@@ -58,21 +60,35 @@ pos3=[pos(1) pos(2) pos(3)+offset pos(4)];
 %Determine the proper x-limits for the third axes
 limx1=get(ax(1),'xlim');
 limx3=[limx1(1)   limx1(1) + 1.2*(limx1(2)-limx1(1))];
+%limx3 = [limx1(1)   limx2(2)]; % Adjusted to end at the second y-axis
 %Bug fix 14 Nov-2001: the 1.2 scale factor in the line above
 %was contributed by Mariano Garcia (BorgWarner Morse TEC Inc)
 
-ax(3)=axes('Position',pos3,'box','off',...
-   'Color','none','XColor','k','YColor','m',...   
-   'xtick',[],'xlim',limx3,'yaxislocation','right');
+%ax(3)=axes('Position',pos3,'box','off',...
+%   'Color','none','XColor','k','YColor','m',...   
+%   'xtick',[],'xlim',limx3,'yaxislocation','right');
+ax(3) = axes('Position', pos3, 'box', 'off', 'Color', 'none', 'XColor', 'k', 'YColor', [0.5 0 0.5], ...
+    'xtick', [], 'xlim', limx3, 'yaxislocation', 'right');
 
-hlines(3) = line(x3,y3,'Color','m','Parent',ax(3));
-limy3=get(ax(3),'YLim');
+hlines(3) = line(x3,y3,'Color',[0.5 0 0.5],'Parent',ax(3));
+% Make the third plot line (y3) thicker
+hlines(3) = line(x3, y3, 'Color', [0.5 0 0.5], 'LineWidth', 1.5, 'Parent', ax(3));
+%limy3=get(ax(3),'YLim');
+limy3=[-1.5 1.5];
 
 %Hide unwanted portion of the x-axis line that lies
 %between the end of the second and third axes
-line([limx1(2) limx3(2)],[limy3(1) limy3(1)],...
+line([limx1(2) limx3(2)],[limy3(1) limy3(2)],...
    'Color',cfig,'Parent',ax(3),'Clipping','off');
 axes(ax(2))
+
+% Set y-axis limits for the first and second axes
+ylim(ax(1), [-6 6]); % Set the desired limits for ax(1)
+ylim(ax(2), [-3 3]); % Set the desired limits for ax(2)
+
+% Explicitly set y-axis ticks for ax(1) and ax(2)
+yticks(ax(1), linspace(-6, 6, 13)); % Adjust the number of ticks as needed
+yticks(ax(2), linspace(-3, 3, 7)); % Adjust the number of ticks as needed
 
 %Label all three y-axes
 set(get(ax(1),'ylabel'),'string',ylabels{1})
