@@ -2,7 +2,7 @@
 
 *Project for the BSc. course MAS246 Motion Control*
 
-![alt text](Servolab-MSI.jpg)
+![alt text](Figures/Servolab-MSI.jpg)
 
 The project revolves around the usage of the All in One Servo Lab 
 created by Audun Hørthe, Helge Nødland and Bjørnar Preus-Olsen. It is a 
